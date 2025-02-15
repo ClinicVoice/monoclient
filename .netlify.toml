@@ -1,0 +1,13 @@
+[build]
+  command = "yarn build"
+  publish = ".next"
+
+[dev]
+  command = "yarn dev"
+  targetPort = 3000
+  framework = "next"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
