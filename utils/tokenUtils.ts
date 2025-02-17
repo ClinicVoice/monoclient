@@ -2,21 +2,21 @@
  * Retrieves the access token from localStorage.
  */
 export const getAccessToken = (): string | null => {
-    return localStorage.getItem("accessToken");
+    return localStorage.getItem('accessToken');
 };
 
 /**
  * Retrieves the QR access token from localStorage.
  */
 export const getQRAccessToken = (): string | null => {
-    return localStorage.getItem("qrAccessToken");
+    return localStorage.getItem('qrAccessToken');
 };
 
 /**
  * Retrieves the refresh token from localStorage.
  */
 export const getRefreshToken = (): string | null => {
-    return localStorage.getItem("refreshToken");
+    return localStorage.getItem('refreshToken');
 };
 
 /**
@@ -24,7 +24,7 @@ export const getRefreshToken = (): string | null => {
  * @param token - The access token to store.
  */
 export const setAccessToken = (token: string): void => {
-    localStorage.setItem("accessToken", token);
+    localStorage.setItem('accessToken', token);
 };
 
 /**
@@ -32,20 +32,20 @@ export const setAccessToken = (token: string): void => {
  * @param token - The refresh token to store.
  */
 export const setRefreshToken = (token: string): void => {
-    localStorage.setItem("refreshToken", token);
+    localStorage.setItem('refreshToken', token);
 };
 
 /**
  * Clears both access and refresh tokens from localStorage.
  */
 export const clearTokens = (): void => {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
 };
 
 /**
  * Clears both QR access token from localStorage.
  */
 export const clearQRTokens = (): void => {
-    localStorage.removeItem("qrAccessToken");
+    localStorage.removeItem('qrAccessToken');
 };

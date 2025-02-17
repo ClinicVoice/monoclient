@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import { styled } from '@mui/material/styles';
 import { Typography } from '@mui/material';
 import theme from '@/theme';
 
