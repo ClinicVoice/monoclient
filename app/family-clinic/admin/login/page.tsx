@@ -27,7 +27,7 @@ export default function AdminLogin() {
     const router = useRouter();
 
     const handleLogin = () => {
-        router.push('/family-clinic/admin-dashboard');
+        router.push('/family-clinic/admin/dashboard');
     };
 
     return (

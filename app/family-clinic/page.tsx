@@ -58,7 +58,7 @@ export default function FamilyClinicHomePage() {
                             variant="contained"
                             color="secondary"
                             size="large"
-                            onClick={() => router.push('/family-clinic/admin-login')}
+                            onClick={() => router.push('/family-clinic/admin/login')}
                         >
                             Admin Login
                         </Button>
