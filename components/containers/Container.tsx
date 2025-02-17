@@ -11,11 +11,11 @@ const ModuleContainer = styled(Box)<{ isMobile?: boolean }>(({ isMobile = false 
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center',
     minHeight: '100vh',
     width: isMobile ? '100vw' : '100vw',
     padding: 0,
     margin: 0,
+    marginTop: 20,
     overflowY: 'auto',
 }));
 

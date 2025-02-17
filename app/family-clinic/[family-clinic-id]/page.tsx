@@ -1,6 +1,6 @@
 'use client';
 
-import { Typography, Paper, Grid, Button } from '@mui/material';
+import { Typography, Paper, Grid, Button, Divider, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useParams, useRouter } from 'next/navigation';
 import { ModuleContainer } from '@/components/containers/Container';
@@ -20,31 +20,35 @@ export default function FamilyClinicHomePage() {
 
     return (
         <ModuleContainer>
-            <Typography variant="h1" gutterBottom>
-                Greenleaf Family Clinic
-            </Typography>
-            <Typography variant="h3" gutterBottom>
-                Dr. John Doe
-            </Typography>
-
             <InfoCard>
-                <Typography variant="body1">
-                    <strong>Address:</strong> 123 Health St, Toronto, ON
+                <Typography variant="h1" gutterBottom>
+                    Greenleaf Family Clinic
                 </Typography>
-                <Typography variant="body1">
-                    <strong>Phone:</strong> (123) 456-7890
+                <Typography variant="h3" gutterBottom>
+                    Dr. John Doe
                 </Typography>
-                <Typography variant="body1">
-                    <strong>Email:</strong> contact@greenleafclinic.com
-                </Typography>
-                <Typography variant="body1" mt={2}>
-                    <strong>Opening Hours:</strong>
-                </Typography>
-                <Typography variant="body2">Monday - Friday: 9 AM - 5 PM</Typography>
-                <Typography variant="body2">Saturday: 10 AM - 3 PM</Typography>
-                <Typography variant="body2">Sunday: Closed</Typography>
+                <Divider />
+                <Box marginY={2}>
+                    <Typography variant="body1">
+                        <strong>Address:</strong> 123 Health St, Toronto, ON
+                    </Typography>
+                    <Typography variant="body1">
+                        <strong>Phone:</strong> (123) 456-7890
+                    </Typography>
+                    <Typography variant="body1">
+                        <strong>Email:</strong> contact@greenleafclinic.com
+                    </Typography>
+                    <Typography variant="body1" mt={2}>
+                        <strong>Opening Hours:</strong>
+                    </Typography>
+                    <Typography variant="body2">Monday - Friday: 9 AM - 5 PM</Typography>
+                    <Typography variant="body2">Saturday: 10 AM - 3 PM</Typography>
+                    <Typography variant="body2">Sunday: Closed</Typography>
+                </Box>
 
-                <Grid container spacing={2} mt={4} justifyContent="center">
+                <Divider />
+
+                <Grid container spacing={2} mt={0} justifyContent="center">
                     <Grid item>
                         <Button
                             variant="contained"
