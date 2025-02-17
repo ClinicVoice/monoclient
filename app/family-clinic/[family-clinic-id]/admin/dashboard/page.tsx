@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import {
     Container,
     Typography,
@@ -17,6 +17,7 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { format } from 'date-fns';
+import LogoutButton from '@/components/buttons/LogoutButton';
 
 const DashboardContainer = styled(Container)(({ theme }) => ({
     display: 'flex',
@@ -49,6 +50,8 @@ const mockAppointments = [
 ];
 
 export default function AdminDashboard() {
+    const params = useParams();
+    const familyClinicId = params['family-clinic-id'];
     const [selectedDate, setSelectedDate] = useState(format(new Date(), 'yyyy-MM-dd'));
     const router = useRouter();
     const filteredAppointments = mockAppointments.filter((app) => app.date === selectedDate);
@@ -72,17 +75,18 @@ export default function AdminDashboard() {
 
     return (
         <DashboardContainer>
-            {/* Navigation Buttons */}
             <ButtonContainer>
                 <Button variant="contained" color="secondary" onClick={() => router.push('/')}>
                     Back to Home
                 </Button>
-                <Button variant="contained" color="error" onClick={() => router.push('/login')}>
-                    Logout
-                </Button>
+                <LogoutButton redirectTo={`/family-clinic/${familyClinicId}`} />
             </ButtonContainer>
 
             <Typography variant="h1" gutterBottom>
+                Greenleaf Family Clinic
+            </Typography>
+
+            <Typography variant="h3" gutterBottom>
                 Admin Dashboard
             </Typography>
 

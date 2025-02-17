@@ -63,7 +63,7 @@ export default function FamilyClinicHomePage() {
                             color="secondary"
                             size="large"
                             onClick={() =>
-                                router.push(`/family-clinic/${familyClinicId}/admin/login`)
+                                router.push(`/family-clinic/${familyClinicId}/admin/dashboard`)
                             }
                         >
                             Admin Dashboard
