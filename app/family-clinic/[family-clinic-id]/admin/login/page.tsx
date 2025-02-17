@@ -37,6 +37,7 @@ export default function AdminLogin() {
     const { setToaster } = useToaster();
     const params = useParams();
     const familyClinicId = params['family-clinic-id'];
+    const { setToaster } = useToaster();
 
     const loginMutation = useLogin();
 
