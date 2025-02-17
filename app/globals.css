@@ -98,3 +98,13 @@ a {
     color-scheme: dark;
   }
 }
+
+h1, h2, h3 {
+  font-family: var(--font-space-grotesk), sans-serif;
+}
+
+/* Set default font to Manrope for the rest */
+body, p, span, div, a, button {
+  font-family: var(--font-manrope), sans-serif;
+}
+
