@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import {
     Container,
     Typography,
@@ -33,6 +34,14 @@ const TableCard = styled(Paper)(({ theme }) => ({
     marginBottom: theme.spacing(4),
 }));
 
+const ButtonContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'space-between',
+    width: '100%',
+    maxWidth: 800,
+    marginBottom: theme.spacing(2),
+}));
+
 const mockAppointments = [
     { id: 1, name: 'John Doe', date: '2025-02-17', time: '10:00 AM', provider: 'Dr. John Doe' },
     { id: 2, name: 'Jane Smith', date: '2025-02-17', time: '11:30 AM', provider: 'Dr. John Doe' },
@@ -41,6 +50,7 @@ const mockAppointments = [
 
 export default function AdminDashboard() {
     const [selectedDate, setSelectedDate] = useState(format(new Date(), 'yyyy-MM-dd'));
+    const router = useRouter();
     const filteredAppointments = mockAppointments.filter((app) => app.date === selectedDate);
 
     const exportCSV = () => {
@@ -62,6 +72,16 @@ export default function AdminDashboard() {
 
     return (
         <DashboardContainer>
+            {/* Navigation Buttons */}
+            <ButtonContainer>
+                <Button variant="contained" color="secondary" onClick={() => router.push('/')}>
+                    Back to Home
+                </Button>
+                <Button variant="contained" color="error" onClick={() => router.push('/login')}>
+                    Logout
+                </Button>
+            </ButtonContainer>
+
             <Typography variant="h1" gutterBottom>
                 Admin Dashboard
             </Typography>

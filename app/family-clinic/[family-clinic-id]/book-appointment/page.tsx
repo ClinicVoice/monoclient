@@ -85,7 +85,10 @@ export default function BookAppointment() {
     return (
         <ModuleContainer>
             <FormContainer>
-                <Typography variant="h2" gutterBottom>
+                <Typography variant="h1" gutterBottom>
+                    Greenleaf Family Clinic
+                </Typography>
+                <Typography variant="h3" gutterBottom>
                     Book an Appointment
                 </Typography>
                 <Stepper

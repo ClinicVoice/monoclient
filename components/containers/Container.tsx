@@ -12,10 +12,11 @@ const ModuleContainer = styled(Box)<{ isMobile?: boolean }>(({ isMobile = false 
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    height: '100vh',
+    minHeight: '100vh',
     width: isMobile ? '100vw' : '100vw',
     padding: 0,
     margin: 0,
+    overflowY: 'auto',
 }));
 
 const MarginContainer = styled(Box)(() => ({

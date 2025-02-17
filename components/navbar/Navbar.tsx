@@ -13,7 +13,7 @@ const LogoContainer = styled(Box)(({ theme }) => ({
 
 export default function Navbar() {
     return (
-        <AppBar position="sticky" color="default" elevation={1}>
+        <AppBar position="sticky" color="secondary" elevation={1}>
             <Toolbar>
                 <LogoContainer>
                     <Image src="/assets/logos/logo.png" alt="Company Logo" width={40} height={40} />
