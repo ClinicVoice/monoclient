@@ -1,10 +1,13 @@
 'use client';
 
+import { useForm } from 'react-hook-form';
+import { useLogin } from '@/hooks/users/useLogin';
+import { useRouter, useParams } from 'next/navigation';
+import { useToaster } from '@/providers/ToasterProvider';
 import { Container, Typography, Paper, TextField, Button, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
 import { ModuleContainer } from '@/components/containers/Container';
+import { LoginRequest } from '@/types/authentication';
 
 const LoginContainer = styled(Container)(({ theme }) => ({
     display: 'flex',
@@ -30,17 +33,29 @@ const ButtonContainer = styled(Box)(({ theme }) => ({
 }));
 
 export default function AdminLogin() {
-    const [credentials, setCredentials] = useState({ username: '', password: '' });
     const router = useRouter();
     const params = useParams();
     const familyClinicId = params['family-clinic-id'];
+    const { setToaster } = useToaster();
 
-    const handleLogin = () => {
-        router.push(`/family-clinic/${familyClinicId}/admin/dashboard`);
-    };
+    const loginMutation = useLogin();
 
-    const handleBack = () => {
-        router.push('/');
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<LoginRequest>();
+
+    const onSubmit = async (data: LoginRequest) => {
+        loginMutation.mutate(data, {
+            onSuccess: () => {
+                setToaster('Login successful!', 'success');
+                router.push(`/family-clinic/${familyClinicId}/admin/dashboard`);
+            },
+            onError: () => {
+                setToaster('Invalid credentials. Please try again.', 'error');
+            },
+        });
     };
 
     return (
@@ -53,38 +68,50 @@ export default function AdminLogin() {
                     <Typography variant="h3" gutterBottom>
                         Admin Login
                     </Typography>
-                    <TextField
-                        fullWidth
-                        margin="normal"
-                        label="Username"
-                        value={credentials.username}
-                        onChange={(e) =>
-                            setCredentials({ ...credentials, username: e.target.value })
-                        }
-                    />
-                    <TextField
-                        fullWidth
-                        margin="normal"
-                        label="Password"
-                        type="password"
-                        value={credentials.password}
-                        onChange={(e) =>
-                            setCredentials({ ...credentials, password: e.target.value })
-                        }
-                    />
-                    <ButtonContainer>
-                        <Button
-                            variant="contained"
-                            color="secondary"
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                        <TextField
                             fullWidth
-                            onClick={handleBack}
-                        >
-                            Back
-                        </Button>
-                        <Button variant="contained" color="primary" fullWidth onClick={handleLogin}>
-                            Login
-                        </Button>
-                    </ButtonContainer>
+                            margin="normal"
+                            label="Email"
+                            type="email"
+                            {...register('email', { required: 'Email is required' })}
+                            error={!!errors.email}
+                            helperText={errors.email?.message}
+                        />
+                        <TextField
+                            fullWidth
+                            margin="normal"
+                            label="Password"
+                            type="password"
+                            {...register('password', { required: 'Password is required' })}
+                            error={!!errors.password}
+                            helperText={errors.password?.message}
+                        />
+                        {loginMutation.isError && (
+                            <Typography color="error" variant="body2">
+                                Invalid credentials. Please try again.
+                            </Typography>
+                        )}
+                        <ButtonContainer>
+                            <Button
+                                variant="contained"
+                                color="secondary"
+                                fullWidth
+                                onClick={() => router.push('/')}
+                            >
+                                Back
+                            </Button>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                fullWidth
+                                type="submit"
+                                disabled={loginMutation.isPending}
+                            >
+                                {loginMutation.isPending ? 'Logging in...' : 'Login'}
+                            </Button>
+                        </ButtonContainer>
+                    </form>
                 </LoginCard>
             </LoginContainer>
         </ModuleContainer>
