@@ -10,6 +10,7 @@ import { ReactQueryProvider } from '@/providers/ReactQueryProvider';
 import { AuthProvider } from '@/providers/AuthProvider';
 import { ToasterProvider } from '@/providers/ToasterProvider';
 import theme from '@/theme';
+import Navbar from '@/components/navbar/Navbar';
 
 const spaceGrotesk = Space_Grotesk({
     subsets: ['latin'],
@@ -42,6 +43,7 @@ export default function RootLayout({
                             <AuthProvider>
                                 <ThemeProvider theme={theme}>
                                     <CssBaseline />
+                                    <Navbar />
                                     {children}
                                 </ThemeProvider>
                             </AuthProvider>
