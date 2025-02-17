@@ -75,13 +75,6 @@ export default function AdminDashboard() {
 
     return (
         <DashboardContainer>
-            <ButtonContainer>
-                <Button variant="contained" color="secondary" onClick={() => router.push('/')}>
-                    Back to Home
-                </Button>
-                <LogoutButton redirectTo={`/family-clinic/${familyClinicId}`} />
-            </ButtonContainer>
-
             <Typography variant="h1" gutterBottom>
                 Greenleaf Family Clinic
             </Typography>
@@ -89,6 +82,13 @@ export default function AdminDashboard() {
             <Typography variant="h3" gutterBottom>
                 Admin Dashboard
             </Typography>
+
+            <ButtonContainer>
+                <Button variant="contained" color="secondary" onClick={() => router.push('/')}>
+                    Back to Home
+                </Button>
+                <LogoutButton redirectTo={`/family-clinic/${familyClinicId}`} />
+            </ButtonContainer>
 
             <TableCard>
                 <Typography variant="h3" gutterBottom>
