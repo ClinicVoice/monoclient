@@ -1,12 +1,12 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, ReactNode } from 'react';
 import { useAuth } from '@/providers/AuthProvider';
 import { useRouter } from 'next/navigation';
 import Loading from '@/components/loading/Loading';
 
 interface UnAuthGuardProps {
-    children: React.ReactNode;
+    children: ReactNode;
     reroute?: string;
 }
 
