@@ -14,7 +14,7 @@ export const createAppointment = async (
     data: CreateAppointmentRequest,
 ): Promise<CreateAppointmentResponse> => {
     try {
-        const response = await axiosInstance.post('/appointments', data);
+        const response = await axiosInstance.post('/public/family_clinic/appointments', data);
         return response.data;
     } catch (error) {
         throw new Error('Failed to create appointment');
@@ -32,7 +32,7 @@ export const getAvailableAppointmentSlots = async (
     duration_limit: number = 30,
 ): Promise<GetAvailableAppointmentSlotsRequest> => {
     try {
-        const response = await axiosInstance.get('/appointments/available', {
+        const response = await axiosInstance.get('/public/family_clinic/appointments/available', {
             params: { date, duration_minutes: duration_limit },
         });
         return response.data;
