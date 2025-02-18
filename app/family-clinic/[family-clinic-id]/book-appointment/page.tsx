@@ -6,9 +6,9 @@ import { useRouter } from 'next/navigation';
 import { ModuleContainer } from '@/components/containers/Container';
 import { FormContainer } from '@/app/family-clinic/[family-clinic-id]/book-appointment/styles';
 import { useCreateAppointment } from '@/hooks/family_clinic/useCreateAppointment';
-import Step1SelectAppointment from '@/components/book-appointment/Step1SelectAppointment';
-import Step2EnterContactInfo from '@/components/book-appointment/Step2EnterContactInfo';
-import ConfirmAppointmentModal from '@/components/book-appointment/ConfirmAppointmentModal';
+import Step1SelectAppointment from '@/components/family-clinic/book-appointment/Step1SelectAppointment';
+import Step2EnterContactInfo from '@/components/family-clinic/book-appointment/Step2EnterContactInfo';
+import ConfirmAppointmentModal from '@/components/family-clinic/book-appointment/ConfirmAppointmentModal';
 import { useToaster } from '@/providers/ToasterProvider';
 import {
     CreateAppointmentForm,
