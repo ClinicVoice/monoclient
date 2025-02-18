@@ -38,11 +38,37 @@ export interface CreateAppointmentResponse {
     message: string;
 }
 
-export interface GetAvailableAppointmentSlotsRequest {
-    date: string;
-    duration_limit: number;
-}
-
 export interface GetAvailableAppointmentSlotsResponse {
     available_times: string[][];
+}
+
+export interface AppointmentRecordRequest {
+    provider: string;
+    appointmentType: string;
+    health_card_number: string;
+    health_card_version: string;
+    first_name: string;
+    last_name: string;
+    phone_number: string;
+    email: string;
+    appointment_date: string;
+    appointment_time_epoch: string;
+    duration: string;
+    birth_date: string;
+    sex: string;
+    pharmacy: string;
+    notes: string;
+    request_timestamp: string;
+}
+
+export interface GetAppointmentRecordRequestsForDateRequest {
+    date: string;
+}
+
+export interface GetRecentAppointmentRecordRequestsRequest {
+    limit?: number;
+}
+
+export interface GetAppointmentRecordRequestsResponse {
+    scheduled_appointments: AppointmentRecordRequest[];
 }

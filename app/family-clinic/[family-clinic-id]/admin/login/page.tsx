@@ -4,33 +4,14 @@ import { useForm } from 'react-hook-form';
 import { useLogin } from '@/hooks/users/useLogin';
 import { useRouter, useParams } from 'next/navigation';
 import { useToaster } from '@/providers/ToasterProvider';
-import { Container, Typography, Paper, TextField, Button, Box } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { Typography, TextField, Button } from '@mui/material';
 import { ModuleContainer } from '@/components/containers/Container';
 import { LoginRequest } from '@/types/authentication';
-
-const LoginContainer = styled(Container)(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    textAlign: 'center',
-    paddingTop: theme.spacing(6),
-}));
-
-const LoginCard = styled(Paper)(({ theme }) => ({
-    padding: theme.spacing(4),
-    width: '100%',
-    maxWidth: 400,
-    textAlign: 'center',
-    backgroundColor: theme.palette.background.paper,
-}));
-
-const ButtonContainer = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    justifyContent: 'space-between',
-    gap: theme.spacing(2),
-    marginTop: theme.spacing(2),
-}));
+import {
+    ButtonContainer,
+    LoginCard,
+    LoginContainer,
+} from '@/app/family-clinic/[family-clinic-id]/admin/login/styles';
 
 export default function AdminLogin() {
     const router = useRouter();
