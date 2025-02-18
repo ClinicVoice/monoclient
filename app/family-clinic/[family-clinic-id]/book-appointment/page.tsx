@@ -90,8 +90,6 @@ export default function BookAppointment() {
         setShowConfirmModal(true);
     };
 
-    console.log('hello???');
-
     const handleConfirmAppointment = () => {
         const appointmentDateTime = new Date(
             `${appointment.date}T${appointment.time}:00Z`,
