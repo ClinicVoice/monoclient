@@ -42,11 +42,7 @@ const WidgetContainer = styled(Box)(({ theme }) => ({
 }));
 
 const FormContainer = styled(Box)`
-    margin-top: 20px;
-    width: 100%;
-    max-width: 400px;
     padding: 2rem;
-    background-color: ${({ theme }) => theme.palette.secondary.main};
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
     border-radius: 12px;
     border-top: 4px solid ${({ theme }) => theme.palette.primary.main};

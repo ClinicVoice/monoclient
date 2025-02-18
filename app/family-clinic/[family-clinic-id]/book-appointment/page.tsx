@@ -1,51 +1,29 @@
 'use client';
 
-import {
-    Container,
-    Typography,
-    Paper,
-    Grid,
-    Button,
-    TextField,
-    MenuItem,
-    Select,
-    FormControl,
-    InputLabel,
-    Stepper,
-    Step,
-    StepLabel,
-    Switch,
-    FormControlLabel,
-} from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { Typography, Stepper, Step, StepLabel } from '@mui/material';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ModuleContainer } from '@/components/containers/Container';
-
-const FormContainer = styled(Container)(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    textAlign: 'center',
-    paddingTop: theme.spacing(6),
-}));
-
-const StepCard = styled(Paper)(({ theme }) => ({
-    padding: theme.spacing(4),
-    width: '100%',
-    maxWidth: 600,
-    textAlign: 'center',
-    backgroundColor: theme.palette.background.paper,
-}));
+import { FormContainer } from '@/app/family-clinic/[family-clinic-id]/book-appointment/styles';
+import { useCreateAppointment } from '@/hooks/family_clinic/useCreateAppointment';
+import Step1SelectAppointment from '@/components/book-appointment/Step1SelectAppointment';
+import Step2EnterContactInfo from '@/components/book-appointment/Step2EnterContactInfo';
+import ConfirmAppointmentModal from '@/components/book-appointment/ConfirmAppointmentModal';
+import {
+    CreateAppointmentForm,
+    SetAppointmentField,
+} from '@/types/family_clinic/appointment_records';
 
 const steps = ['Select Appointment', 'Enter Contact Info'];
 
 export default function BookAppointment() {
     const [step, setStep] = useState(0);
-    const [appointment, setAppointment] = useState({
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
+    const [appointment, setAppointment] = useState<CreateAppointmentForm>({
         provider: '',
         appointmentType: '',
-        reason: '',
+        note: '',
         date: '',
         time: '',
         hasHealthCard: true,
@@ -59,28 +37,85 @@ export default function BookAppointment() {
         email: '',
         pharmacy: '',
     });
-    const router = useRouter();
 
-    const handleNext = () => setStep((prev) => prev + 1);
+    const router = useRouter();
+    const { mutate: createAppointment, isPending } = useCreateAppointment();
+
+    const updateAppointmentField: SetAppointmentField = (field: string, value: unknown) => {
+        setAppointment((prev: CreateAppointmentForm) => ({
+            ...prev,
+            [field]: value,
+        }));
+    };
+
+    const validateStep1 = () => {
+        const newErrors: { [key: string]: string } = {};
+        if (!appointment.provider) newErrors.provider = 'Provider is required';
+        if (!appointment.appointmentType)
+            newErrors.appointmentType = 'Appointment Type is required';
+        if (!appointment.note) newErrors.note = 'Reason for Visit is required';
+        if (!appointment.date) newErrors.date = 'Date is required';
+        if (!appointment.time) newErrors.time = 'Time is required';
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
+    const validateStep2 = () => {
+        const newErrors: { [key: string]: string } = {};
+        if (appointment.hasHealthCard) {
+            if (!appointment.healthCardNumber)
+                newErrors.healthCardNumber = 'Health Card Number is required';
+            if (!appointment.healthCardVersion) newErrors.healthCardVersion = 'Version is required';
+        } else {
+            if (!appointment.firstName) newErrors.firstName = 'First Name is required';
+            if (!appointment.lastName) newErrors.lastName = 'Last Name is required';
+            if (!appointment.sex) newErrors.sex = 'Sex is required';
+            if (!appointment.birthday) newErrors.birthday = 'Birthday is required';
+        }
+        if (!appointment.contact) newErrors.contact = 'Phone Number is required';
+        if (!appointment.email) newErrors.email = 'Email is required';
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
+    const handleNext = () => {
+        if (step === 0 && validateStep1()) setStep(1);
+    };
+
     const handleBack = () => setStep((prev) => prev - 1);
-    const resetForm = () =>
-        setAppointment({
-            provider: '',
-            appointmentType: '',
-            reason: '',
-            date: '',
-            time: '',
-            hasHealthCard: true,
-            healthCardNumber: '',
-            healthCardVersion: '',
-            firstName: '',
-            lastName: '',
-            birthday: '',
-            sex: '',
-            contact: '',
-            email: '',
-            pharmacy: '',
-        });
+
+    const handleReviewAppointment = () => {
+        if (!validateStep2()) return;
+
+        setShowConfirmModal(true);
+    };
+
+    console.log('hello???');
+
+    const handleConfirmAppointment = () => {
+        const appointmentDateTime = new Date(
+            `${appointment.date}T${appointment.time}:00Z`,
+        ).toISOString();
+
+        createAppointment(
+            {
+                provider: appointment.provider,
+                appointmentType: appointment.appointmentType,
+                health_card_number: appointment.hasHealthCard ? appointment.healthCardNumber : '',
+                health_card_version: appointment.hasHealthCard ? appointment.healthCardVersion : '',
+                first_name: appointment.firstName,
+                last_name: appointment.lastName,
+                phone_number: appointment.contact,
+                email: appointment.email,
+                appointment_date_time: appointmentDateTime,
+                birth_date: appointment.birthday,
+                sex: appointment.sex,
+                pharmacy: appointment.pharmacy,
+                notes: appointment.note,
+            },
+            { onSuccess: () => router.push('/') },
+        );
+    };
 
     return (
         <ModuleContainer>
@@ -102,221 +137,32 @@ export default function BookAppointment() {
                         </Step>
                     ))}
                 </Stepper>
+
                 {step === 0 ? (
-                    <StepCard>
-                        <FormControl fullWidth margin="normal">
-                            <InputLabel>Provider</InputLabel>
-                            <Select
-                                label="Provider"
-                                value={appointment.provider}
-                                onChange={(e) =>
-                                    setAppointment({ ...appointment, provider: e.target.value })
-                                }
-                            >
-                                <MenuItem value="Dr. John Doe">Dr. John Doe</MenuItem>
-                            </Select>
-                        </FormControl>
-                        {appointment.provider && (
-                            <>
-                                <FormControl fullWidth margin="normal">
-                                    <InputLabel>Appointment Type</InputLabel>
-                                    <Select
-                                        label="Appointment Type"
-                                        value={appointment.appointmentType}
-                                        onChange={(e) =>
-                                            setAppointment({
-                                                ...appointment,
-                                                appointmentType: e.target.value,
-                                            })
-                                        }
-                                    >
-                                        <MenuItem value="General Consultation">
-                                            General Consultation
-                                        </MenuItem>
-                                    </Select>
-                                </FormControl>
-                                <TextField
-                                    fullWidth
-                                    margin="normal"
-                                    label="Reason for Visit"
-                                    inputProps={{ maxLength: 75 }}
-                                    value={appointment.reason}
-                                    onChange={(e) =>
-                                        setAppointment({ ...appointment, reason: e.target.value })
-                                    }
-                                />
-                                <TextField
-                                    fullWidth
-                                    margin="normal"
-                                    label="Date"
-                                    type="date"
-                                    InputLabelProps={{ shrink: true }}
-                                    value={appointment.date}
-                                    onChange={(e) =>
-                                        setAppointment({ ...appointment, date: e.target.value })
-                                    }
-                                />
-                                <TextField
-                                    fullWidth
-                                    margin="normal"
-                                    label="Time"
-                                    type="time"
-                                    InputLabelProps={{ shrink: true }}
-                                    value={appointment.time}
-                                    onChange={(e) =>
-                                        setAppointment({ ...appointment, time: e.target.value })
-                                    }
-                                />
-                            </>
-                        )}
-                        <Grid container spacing={2} mt={2} justifyContent="center">
-                            <Grid item>
-                                <Button
-                                    variant="contained"
-                                    color="secondary"
-                                    onClick={() => router.push('/')}
-                                >
-                                    Back
-                                </Button>
-                            </Grid>
-                            <Grid item>
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    onClick={handleNext}
-                                    disabled={!appointment.provider}
-                                >
-                                    Next
-                                </Button>
-                            </Grid>
-                        </Grid>
-                    </StepCard>
+                    <Step1SelectAppointment
+                        appointment={appointment}
+                        updateAppointmentField={updateAppointmentField}
+                        errors={errors}
+                        handleNext={handleNext}
+                    />
                 ) : (
-                    <StepCard>
-                        <FormControlLabel
-                            control={
-                                <Switch
-                                    checked={appointment.hasHealthCard}
-                                    onChange={(e) =>
-                                        setAppointment({
-                                            ...appointment,
-                                            hasHealthCard: e.target.checked,
-                                        })
-                                    }
-                                />
-                            }
-                            label="Do you have an Ontario Health Card?"
-                        />
-                        {appointment.hasHealthCard ? (
-                            <>
-                                <TextField
-                                    fullWidth
-                                    margin="normal"
-                                    label="Health Card Number"
-                                    value={appointment.healthCardNumber}
-                                    onChange={(e) =>
-                                        setAppointment({
-                                            ...appointment,
-                                            healthCardNumber: e.target.value,
-                                        })
-                                    }
-                                />
-                                <TextField
-                                    fullWidth
-                                    margin="normal"
-                                    label="Version"
-                                    value={appointment.healthCardVersion}
-                                    onChange={(e) =>
-                                        setAppointment({
-                                            ...appointment,
-                                            healthCardVersion: e.target.value,
-                                        })
-                                    }
-                                />
-                            </>
-                        ) : (
-                            <>
-                                <TextField
-                                    fullWidth
-                                    margin="normal"
-                                    label="First Name"
-                                    value={appointment.firstName}
-                                    onChange={(e) =>
-                                        setAppointment({
-                                            ...appointment,
-                                            firstName: e.target.value,
-                                        })
-                                    }
-                                />
-                                <TextField
-                                    fullWidth
-                                    margin="normal"
-                                    label="Last Name"
-                                    value={appointment.lastName}
-                                    onChange={(e) =>
-                                        setAppointment({ ...appointment, lastName: e.target.value })
-                                    }
-                                />
-                                <TextField
-                                    fullWidth
-                                    margin="normal"
-                                    label="Birthday"
-                                    type="date"
-                                    InputLabelProps={{ shrink: true }}
-                                    value={appointment.birthday}
-                                    onChange={(e) =>
-                                        setAppointment({ ...appointment, birthday: e.target.value })
-                                    }
-                                />
-                                <TextField
-                                    fullWidth
-                                    margin="normal"
-                                    label="Sex"
-                                    value={appointment.sex}
-                                    onChange={(e) =>
-                                        setAppointment({ ...appointment, sex: e.target.value })
-                                    }
-                                />
-                            </>
-                        )}
-                        <TextField
-                            fullWidth
-                            margin="normal"
-                            label="Phone Number"
-                            type="tel"
-                            value={appointment.contact}
-                            onChange={(e) =>
-                                setAppointment({ ...appointment, contact: e.target.value })
-                            }
-                        />
-                        <TextField
-                            fullWidth
-                            margin="normal"
-                            label="Email"
-                            type="email"
-                            value={appointment.email}
-                            onChange={(e) =>
-                                setAppointment({ ...appointment, email: e.target.value })
-                            }
-                        />
-                        <Grid container spacing={2} mt={2} justifyContent="center">
-                            <Grid item>
-                                <Button variant="contained" color="secondary" onClick={handleBack}>
-                                    Back
-                                </Button>
-                            </Grid>
-                            <Grid item>
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    onClick={() => router.push('/')}
-                                >
-                                    Book Appointment
-                                </Button>
-                            </Grid>
-                        </Grid>
-                    </StepCard>
+                    <Step2EnterContactInfo
+                        appointment={appointment}
+                        updateAppointmentField={updateAppointmentField}
+                        errors={errors}
+                        handleBack={handleBack}
+                        handleSubmit={handleReviewAppointment}
+                        isPending={isPending}
+                    />
                 )}
+
+                <ConfirmAppointmentModal
+                    open={showConfirmModal}
+                    appointment={appointment}
+                    onClose={() => setShowConfirmModal(false)}
+                    onConfirm={handleConfirmAppointment}
+                    isPending={isPending}
+                />
             </FormContainer>
         </ModuleContainer>
     );
