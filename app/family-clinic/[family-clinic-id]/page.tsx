@@ -1,17 +1,9 @@
 'use client';
 
 import { Typography, Paper, Grid, Button, Divider, Box } from '@mui/material';
-import { styled } from '@mui/material/styles';
 import { useParams, useRouter } from 'next/navigation';
 import { ModuleContainer } from '@/components/containers/Container';
-
-const InfoCard = styled(Paper)(({ theme }) => ({
-    padding: theme.spacing(4),
-    width: '100%',
-    maxWidth: 600,
-    textAlign: 'center',
-    backgroundColor: theme.palette.background.paper,
-}));
+import { InfoCard } from '@/app/family-clinic/[family-clinic-id]/styles';
 
 export default function FamilyClinicHomePage() {
     const router = useRouter();
