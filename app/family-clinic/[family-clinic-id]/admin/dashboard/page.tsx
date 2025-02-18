@@ -92,7 +92,7 @@ export default function AdminDashboard() {
 
             <TableCard>
                 <Typography variant="h3" gutterBottom>
-                    Recent Appointments
+                    Recent Appointment Requests
                 </Typography>
                 <TableContainer>
                     <Table>

@@ -9,6 +9,7 @@ import { useCreateAppointment } from '@/hooks/family_clinic/useCreateAppointment
 import Step1SelectAppointment from '@/components/book-appointment/Step1SelectAppointment';
 import Step2EnterContactInfo from '@/components/book-appointment/Step2EnterContactInfo';
 import ConfirmAppointmentModal from '@/components/book-appointment/ConfirmAppointmentModal';
+import { useToaster } from '@/providers/ToasterProvider';
 import {
     CreateAppointmentForm,
     SetAppointmentField,
@@ -17,6 +18,7 @@ import {
 const steps = ['Select Appointment', 'Enter Contact Info'];
 
 export default function BookAppointment() {
+    const { setToaster } = useToaster();
     const [step, setStep] = useState(0);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -57,6 +59,11 @@ export default function BookAppointment() {
         if (!appointment.date) newErrors.date = 'Date is required';
         if (!appointment.time) newErrors.time = 'Time is required';
         setErrors(newErrors);
+
+        if (Object.keys(newErrors).length > 0) {
+            setToaster('Please complete all required contact details.', 'error');
+        }
+
         return Object.keys(newErrors).length === 0;
     };
 
@@ -75,6 +82,11 @@ export default function BookAppointment() {
         if (!appointment.contact) newErrors.contact = 'Phone Number is required';
         if (!appointment.email) newErrors.email = 'Email is required';
         setErrors(newErrors);
+
+        if (Object.keys(newErrors).length > 0) {
+            setToaster('Please complete all required contact details.', 'error');
+        }
+
         return Object.keys(newErrors).length === 0;
     };
 
@@ -111,7 +123,15 @@ export default function BookAppointment() {
                 pharmacy: appointment.pharmacy,
                 notes: appointment.note,
             },
-            { onSuccess: () => router.push('/') },
+            {
+                onSuccess: () => {
+                    setToaster('Appointment successfully booked!', 'success');
+                    router.push('/');
+                },
+                onError: () => {
+                    setToaster('Failed to book appointment. Please try again.', 'error');
+                },
+            },
         );
     };
 
