@@ -43,6 +43,6 @@ export interface GetAvailableAppointmentSlotsRequest {
     duration_limit: number;
 }
 
-export interface GetAvailableAppointmentSlotsRequest {
-    available_slots: string[][];
+export interface GetAvailableAppointmentSlotsResponse {
+    available_times: string[][];
 }

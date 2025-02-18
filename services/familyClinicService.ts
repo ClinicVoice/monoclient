@@ -2,7 +2,7 @@ import axiosInstance from '@/instances/axiosInstance';
 import {
     CreateAppointmentRequest,
     CreateAppointmentResponse,
-    GetAvailableAppointmentSlotsRequest,
+    GetAvailableAppointmentSlotsResponse,
 } from '@/types/family_clinic/appointment_records';
 
 /**
@@ -30,7 +30,7 @@ export const createAppointment = async (
 export const getAvailableAppointmentSlots = async (
     date: string,
     duration_limit: number = 30,
-): Promise<GetAvailableAppointmentSlotsRequest> => {
+): Promise<GetAvailableAppointmentSlotsResponse> => {
     try {
         const response = await axiosInstance.get('/public/family_clinic/appointments/available', {
             params: { date, duration_minutes: duration_limit },
