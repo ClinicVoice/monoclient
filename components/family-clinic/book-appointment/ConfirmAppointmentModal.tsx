@@ -36,7 +36,7 @@ export default function ConfirmAppointmentModal({
                     <ListItem>
                         <ListItemText
                             primary="Appointment Type"
-                            secondary={appointment.appointmentType}
+                            secondary={appointment.appointment_type}
                         />
                     </ListItem>
                     <ListItem>

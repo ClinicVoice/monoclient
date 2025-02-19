@@ -2,7 +2,7 @@ export interface CreateAppointmentForm {
     provider: string;
     email: string;
     contact: string;
-    appointmentType: string;
+    appointment_type: string;
     note: string;
     date: string;
     time: string;
@@ -20,7 +20,7 @@ export type SetAppointmentField = (field: keyof CreateAppointmentForm, value: an
 
 export interface CreateAppointmentRequest {
     provider: string;
-    appointmentType: string;
+    appointment_type: string;
     health_card_number: string;
     health_card_version: string;
     first_name: string;
@@ -44,7 +44,7 @@ export interface GetAvailableAppointmentSlotsResponse {
 
 export interface AppointmentRecordRequest {
     provider: string;
-    appointmentType: string;
+    appointment_type: string;
     health_card_number: string;
     health_card_version: string;
     first_name: string;

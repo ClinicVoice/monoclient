@@ -25,7 +25,7 @@ export default function BookAppointment() {
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [appointment, setAppointment] = useState<CreateAppointmentForm>({
         provider: '',
-        appointmentType: '',
+        appointment_type: '',
         note: '',
         date: '',
         time: '',
@@ -54,8 +54,8 @@ export default function BookAppointment() {
     const validateStep1 = () => {
         const newErrors: { [key: string]: string } = {};
         if (!appointment.provider) newErrors.provider = 'Provider is required';
-        if (!appointment.appointmentType)
-            newErrors.appointmentType = 'Appointment Type is required';
+        if (!appointment.appointment_type)
+            newErrors.appointment_type = 'Appointment Type is required';
         if (!appointment.note) newErrors.note = 'Reason for Visit is required';
         if (!appointment.date) newErrors.date = 'Date is required';
         if (!appointment.time) newErrors.time = 'Time is required';
@@ -111,7 +111,7 @@ export default function BookAppointment() {
         createAppointment(
             {
                 provider: appointment.provider,
-                appointmentType: appointment.appointmentType,
+                appointment_type: appointment.appointment_type,
                 health_card_number: appointment.hasHealthCard ? appointment.healthCardNumber : '',
                 health_card_version: appointment.hasHealthCard ? appointment.healthCardVersion : '',
                 first_name: appointment.firstName,

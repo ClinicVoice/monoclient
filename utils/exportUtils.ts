@@ -32,7 +32,7 @@ export const exportAppointmentRecordRequestsToCSV = (
         ],
         ...appointments.map((app) => [
             app.provider,
-            app.appointmentType,
+            app.appointment_type,
             app.health_card_number,
             app.health_card_version,
             app.first_name,

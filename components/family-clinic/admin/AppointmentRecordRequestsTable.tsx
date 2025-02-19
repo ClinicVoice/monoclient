@@ -107,7 +107,7 @@ export default function AppointmentRecordRequestsTable({
                             {appointments.map((app, index) => (
                                 <TableRow key={index}>
                                     <TableCell>{app.provider}</TableCell>
-                                    <TableCell>{app.appointmentType}</TableCell>
+                                    <TableCell>{app.appointment_type}</TableCell>
                                     <TableCell>{app.health_card_number}</TableCell>
                                     <TableCell>{app.first_name}</TableCell>
                                     <TableCell>{app.last_name}</TableCell>

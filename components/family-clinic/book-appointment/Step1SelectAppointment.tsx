@@ -60,14 +60,14 @@ const Step1SelectAppointment = ({
 
             {appointment.provider && (
                 <>
-                    <FormControl fullWidth margin="normal" error={!!errors.appointmentType}>
+                    <FormControl fullWidth margin="normal" error={!!errors.appointment_type}>
                         <InputLabel>Appointment Type</InputLabel>
                         <Select
                             sx={{ textAlign: 'left' }}
                             label="Appointment Type"
-                            value={appointment.appointmentType}
+                            value={appointment.appointment_type}
                             onChange={(e) =>
-                                updateAppointmentField('appointmentType', e.target.value)
+                                updateAppointmentField('appointment_type', e.target.value)
                             }
                         >
                             <MenuItem value="General Consultation">General Consultation</MenuItem>
@@ -87,7 +87,7 @@ const Step1SelectAppointment = ({
                 </>
             )}
 
-            {appointment.provider && appointment.appointmentType && (
+            {appointment.provider && appointment.appointment_type && (
                 <>
                     <TextField
                         fullWidth
