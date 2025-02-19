@@ -61,14 +61,6 @@ export interface AppointmentRecordRequest {
     request_timestamp: string;
 }
 
-export interface GetAppointmentRecordRequestsForDateRequest {
-    date: string;
-}
-
-export interface GetRecentAppointmentRecordRequestsRequest {
-    limit?: number;
-}
-
 export interface GetAppointmentRecordRequestsResponse {
     scheduled_appointments: AppointmentRecordRequest[];
 }

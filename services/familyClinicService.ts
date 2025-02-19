@@ -50,17 +50,10 @@ export const getAvailableAppointmentSlots = async (
 export const getScheduledAppointmentsByDate = async (
     date: string,
 ): Promise<GetAppointmentRecordRequestsResponse> => {
-    try {
-        const response = await axiosInstance.get(
-            '/internal/family_clinic/appointments/requests/date',
-            {
-                params: { date },
-            },
-        );
-        return response.data;
-    } catch (error) {
-        throw new Error('Failed to fetch scheduled appointment requests for the date');
-    }
+    const response = await axiosInstance.get('/internal/family_clinic/appointments/requests/date', {
+        params: { date },
+    });
+    return response.data;
 };
 
 /**
@@ -71,15 +64,11 @@ export const getScheduledAppointmentsByDate = async (
 export const getRecentScheduledAppointments = async (
     limit: number = 5,
 ): Promise<GetAppointmentRecordRequestsResponse> => {
-    try {
-        const response = await axiosInstance.get(
-            '/internal/family_clinic/appointments/requests/recent',
-            {
-                params: { limit },
-            },
-        );
-        return response.data;
-    } catch (error) {
-        throw new Error('Failed to fetch recent scheduled appointment requests');
-    }
+    const response = await axiosInstance.get(
+        '/internal/family_clinic/appointments/requests/recent',
+        {
+            params: { limit },
+        },
+    );
+    return response.data;
 };
