@@ -14,6 +14,7 @@ import {
     CreateAppointmentForm,
     SetAppointmentField,
 } from '@/types/family_clinic/appointment_records';
+import { convertTo24HourFormat } from '@/utils/dateTimeUtils';
 
 const steps = ['Select Appointment', 'Enter Contact Info'];
 
@@ -103,9 +104,9 @@ export default function BookAppointment() {
     };
 
     const handleConfirmAppointment = () => {
-        const appointmentDateTime = new Date(
-            `${appointment.date}T${appointment.time}:00Z`,
-        ).toISOString();
+        const date = appointment.date;
+        const time = convertTo24HourFormat(appointment.time);
+        const appointmentDateTime = new Date(`${date}T${time}:00Z`).toISOString();
 
         createAppointment(
             {
