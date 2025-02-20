@@ -1,41 +1,56 @@
 'use client';
 
-import { Typography, Paper, Grid, Button, Divider, Box } from '@mui/material';
+import { Typography, Grid, Button, Divider, Box } from '@mui/material';
 import { useParams, useRouter } from 'next/navigation';
 import { ModuleContainer } from '@/components/containers/Container';
 import { InfoCard } from '@/app/family-clinic/[family-clinic-id]/styles';
+import { useFamilyClinicInfo } from '@/hooks/family_clinic/useFamilyClinicInfo';
+import Loading from '@/components/loading/Loading';
+import { parseFamilyClinicIdFromUrlParams } from '@/utils/familyClinicUtils';
+import ErrorScreen from '@/components/screens/ErrorScreen';
 
 export default function FamilyClinicHomePage() {
     const router = useRouter();
     const params = useParams();
-    const familyClinicId = params['family-clinic-id'];
+    const familyClinicId = parseFamilyClinicIdFromUrlParams(params);
+    const { data: clinic, isLoading, error } = useFamilyClinicInfo(familyClinicId);
+
+    if (isLoading) {
+        return <Loading />;
+    }
+
+    if (error || !clinic) {
+        return <ErrorScreen message="Error loading clinic information." />;
+    }
 
     return (
         <ModuleContainer>
             <InfoCard>
                 <Typography variant="h1" gutterBottom>
-                    Greenleaf Family Clinic
+                    {clinic.name}
                 </Typography>
                 <Typography variant="h3" gutterBottom>
-                    Dr. John Doe
+                    {clinic.doctorName}
                 </Typography>
                 <Divider />
                 <Box marginY={2}>
                     <Typography variant="body1">
-                        <strong>Address:</strong> 123 Health St, Toronto, ON
+                        <strong>Address:</strong> {clinic.address}
                     </Typography>
                     <Typography variant="body1">
-                        <strong>Phone:</strong> (123) 456-7890
+                        <strong>Phone:</strong> {clinic.phone}
                     </Typography>
                     <Typography variant="body1">
-                        <strong>Email:</strong> contact@greenleafclinic.com
+                        <strong>Email:</strong> {clinic.email}
                     </Typography>
                     <Typography variant="body1" mt={2}>
                         <strong>Opening Hours:</strong>
                     </Typography>
-                    <Typography variant="body2">Monday - Friday: 9 AM - 5 PM</Typography>
-                    <Typography variant="body2">Saturday: 10 AM - 3 PM</Typography>
-                    <Typography variant="body2">Sunday: Closed</Typography>
+                    {Object.entries(clinic.openingHours).map(([day, hours]) => (
+                        <Typography variant="body2" key={day}>
+                            {day}: {hours ? `${hours.open} - ${hours.close}` : 'Closed'}
+                        </Typography>
+                    ))}
                 </Box>
 
                 <Divider />

@@ -5,6 +5,8 @@ import {
     GetAppointmentRecordRequestsResponse,
     GetAvailableAppointmentSlotsResponse,
 } from '@/types/family_clinic/appointment_records';
+import { FamilyClinic } from '@/types/family_clinic/family_clinic';
+import { mockFamilyClinic } from '@/mocks/mock_family_clinic';
 
 /**
  * Create a new appointment
@@ -71,4 +73,10 @@ export const getRecentScheduledAppointments = async (
         },
     );
     return response.data;
+};
+
+export const getFamilyClinicInfo = async (familyClinicId: string): Promise<FamilyClinic> => {
+    return new Promise((resolve) => {
+        setTimeout(() => resolve(mockFamilyClinic), 500);
+    });
 };
