@@ -14,7 +14,7 @@ const useMobileDetect = (widthThreshold: number = 900): boolean => {
         return () => {
             window.removeEventListener('resize', handleResize);
         };
-    }, []);
+    }, [widthThreshold]);
 
     return isMobile;
 };

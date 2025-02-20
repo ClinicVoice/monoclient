@@ -4,6 +4,7 @@ import React, { createContext, useContext, useCallback } from 'react';
 import { Toaster, toast } from 'react-hot-toast';
 
 const ToasterContext = createContext({
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     setToaster: (message: string, type: 'success' | 'error' | 'info' = 'info') => {},
 });
 

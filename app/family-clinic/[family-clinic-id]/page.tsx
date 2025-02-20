@@ -8,6 +8,7 @@ import { useFamilyClinicInfo } from '@/hooks/family_clinic/useFamilyClinicInfo';
 import Loading from '@/components/loading/Loading';
 import { parseFamilyClinicIdFromUrlParams } from '@/utils/familyClinicUtils';
 import ErrorScreen from '@/components/screens/ErrorScreen';
+import FamilyClinicOpeningHoursDisplay from '@/components/family-clinic/FamilyClinicOpeningHoursDisplay';
 
 export default function FamilyClinicHomePage() {
     const router = useRouter();
@@ -43,14 +44,7 @@ export default function FamilyClinicHomePage() {
                     <Typography variant="body1">
                         <strong>Email:</strong> {clinic.email}
                     </Typography>
-                    <Typography variant="body1" mt={2}>
-                        <strong>Opening Hours:</strong>
-                    </Typography>
-                    {Object.entries(clinic.openingHours).map(([day, hours]) => (
-                        <Typography variant="body2" key={day}>
-                            {day}: {hours ? `${hours.open} - ${hours.close}` : 'Closed'}
-                        </Typography>
-                    ))}
+                    <FamilyClinicOpeningHoursDisplay openingHours={clinic.openingHours} />
                 </Box>
 
                 <Divider />

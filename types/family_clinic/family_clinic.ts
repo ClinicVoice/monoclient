@@ -1,3 +1,7 @@
+export interface FamilyClinicOpeningHours {
+    [day: string]: { open: string; close: string } | null;
+}
+
 export interface FamilyClinic {
     familyClinicId: string;
     name: string;
@@ -5,9 +9,7 @@ export interface FamilyClinic {
     address: string;
     phone: string;
     email: string;
-    openingHours: {
-        [day: string]: { open: string; close: string } | null;
-    };
+    openingHours: FamilyClinicOpeningHours;
     providers: string[];
     appointmentTypes: string[];
 }

@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/providers/AuthProvider';
 import { useToaster } from '@/providers/ToasterProvider';
 import { logoutUser } from '@/services/authenticationService';
+import { AxiosError } from 'axios';
 
 export const useLogout = () => {
     const queryClient = useQueryClient();
@@ -22,8 +23,8 @@ export const useLogout = () => {
             clearAuth();
             setToaster('Logged out successfully', 'success');
         },
-        onError: (error: any) => {
-            console.error('Logout failed:', error.message);
+
+        onError: (error: AxiosError) => {
             setToaster(error.message || 'Failed to log out', 'error');
         },
     });

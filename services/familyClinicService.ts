@@ -16,12 +16,8 @@ import { mockFamilyClinic } from '@/mocks/mock_family_clinic';
 export const createAppointment = async (
     data: CreateAppointmentRequest,
 ): Promise<CreateAppointmentResponse> => {
-    try {
-        const response = await axiosInstance.post('/public/family_clinic/appointments', data);
-        return response.data;
-    } catch (error) {
-        throw new Error('Failed to create appointment');
-    }
+    const response = await axiosInstance.post('/public/family_clinic/appointments', data);
+    return response.data;
 };
 
 /**
@@ -34,14 +30,10 @@ export const getAvailableAppointmentSlots = async (
     date: string,
     duration_limit: number = 30,
 ): Promise<GetAvailableAppointmentSlotsResponse> => {
-    try {
-        const response = await axiosInstance.get('/public/family_clinic/appointments/available', {
-            params: { date, duration_minutes: duration_limit },
-        });
-        return response.data;
-    } catch (error) {
-        throw new Error('Failed to fetch available appointment slots');
-    }
+    const response = await axiosInstance.get('/public/family_clinic/appointments/available', {
+        params: { date, duration_minutes: duration_limit },
+    });
+    return response.data;
 };
 
 /**
@@ -75,6 +67,7 @@ export const getRecentScheduledAppointments = async (
     return response.data;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const getFamilyClinicInfo = async (familyClinicId: string): Promise<FamilyClinic> => {
     return new Promise((resolve) => {
         setTimeout(() => resolve(mockFamilyClinic), 500);

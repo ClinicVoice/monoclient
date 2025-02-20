@@ -8,6 +8,8 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
     const familyClinicId = params['family-clinic-id'];
 
     return (
-        <AuthGuard reroute={`/family-clinic/${familyClinicId}/admin/login`}>{children}</AuthGuard>
+        <AuthGuard showToast={false} reroute={`/family-clinic/${familyClinicId}/admin/login`}>
+            {children}
+        </AuthGuard>
     );
 }
