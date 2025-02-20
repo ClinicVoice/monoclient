@@ -1,4 +1,4 @@
-const isLocal = true;
+const isLocal = false;
 
 export const BASE_URL = isLocal ? 'http://localhost:5050' : 'https://clinicvoice.kevinle623.online';
 
