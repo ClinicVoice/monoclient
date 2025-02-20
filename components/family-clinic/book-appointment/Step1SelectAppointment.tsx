@@ -15,9 +15,12 @@ import {
     SetAppointmentField,
 } from '@/types/family_clinic/appointment_records';
 import { StepCard } from '@/app/family-clinic/[family-clinic-id]/book-appointment/styles';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { useAvailableAppointmentSlots } from '@/hooks/family_clinic/useAvailableAppointmentSlots';
 import { extractStartTimes } from '@/utils/dateTimeUtils';
+import { useFamilyClinicInfo } from '@/hooks/family_clinic/useFamilyClinicInfo';
+import { parseFamilyClinicIdFromUrlParams } from '@/utils/familyClinicUtils';
+
 interface Step1Props {
     appointment: CreateAppointmentForm;
     updateAppointmentField: SetAppointmentField;
@@ -32,9 +35,18 @@ const Step1SelectAppointment = ({
     handleNext,
 }: Step1Props) => {
     const router = useRouter();
+    const params = useParams();
+    const familyClinicId = parseFamilyClinicIdFromUrlParams(params);
+
     const [selectedTime, setSelectedTime] = useState('');
 
-    const { data, isLoading } = useAvailableAppointmentSlots(appointment.date, 30);
+    const {
+        data: clinic,
+        isLoading: clinicLoading,
+        error: clinicError,
+    } = useFamilyClinicInfo(familyClinicId);
+    const { data, isLoading: slotsLoading } = useAvailableAppointmentSlots(appointment.date, 30);
+
     const availableSlots = data?.available_times || [];
     const formattedSlots = extractStartTimes(availableSlots);
 
@@ -43,6 +55,14 @@ const Step1SelectAppointment = ({
             updateAppointmentField('time', selectedTime);
         }
     }, [selectedTime, updateAppointmentField]);
+
+    if (clinicLoading) {
+        return <CircularProgress />;
+    }
+
+    if (clinicError || !clinic) {
+        return <Alert severity="error">Failed to load clinic information.</Alert>;
+    }
 
     return (
         <StepCard>
@@ -54,7 +74,11 @@ const Step1SelectAppointment = ({
                     value={appointment.provider}
                     onChange={(e) => updateAppointmentField('provider', e.target.value)}
                 >
-                    <MenuItem value="Dr. John Doe">Dr. John Doe</MenuItem>
+                    {clinic.providers.map((provider: string, index: number) => (
+                        <MenuItem key={index} value={provider}>
+                            {provider}
+                        </MenuItem>
+                    ))}
                 </Select>
             </FormControl>
 
@@ -70,7 +94,11 @@ const Step1SelectAppointment = ({
                                 updateAppointmentField('appointment_type', e.target.value)
                             }
                         >
-                            <MenuItem value="General Consultation">General Consultation</MenuItem>
+                            {clinic.appointmentTypes.map((type: string, index: number) => (
+                                <MenuItem key={index} value={type}>
+                                    {type}
+                                </MenuItem>
+                            ))}
                         </Select>
                     </FormControl>
 
@@ -106,7 +134,7 @@ const Step1SelectAppointment = ({
 
             {appointment.date && (
                 <>
-                    {isLoading ? (
+                    {slotsLoading ? (
                         <Grid container justifyContent="center" mt={2}>
                             <CircularProgress />
                         </Grid>

@@ -18,7 +18,7 @@ const UnAuthGuard = ({ children, reroute = '/' }: UnAuthGuardProps) => {
         if (isInitialized && isAuthed) {
             router.push(reroute || '/');
         }
-    }, [isAuthed, reroute, router]);
+    }, [isInitialized, isAuthed, reroute, router]);
 
     if (isAuthed || !isInitialized) {
         return <Loading />;

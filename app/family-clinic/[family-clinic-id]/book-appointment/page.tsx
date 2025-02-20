@@ -2,7 +2,7 @@
 
 import { Typography, Stepper, Step, StepLabel } from '@mui/material';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { ModuleContainer } from '@/components/containers/Container';
 import { FormContainer } from '@/app/family-clinic/[family-clinic-id]/book-appointment/styles';
 import { useCreateAppointment } from '@/hooks/family_clinic/useCreateAppointment';
@@ -15,10 +15,16 @@ import {
     SetAppointmentField,
 } from '@/types/family_clinic/appointment_records';
 import { convertTo24HourFormat } from '@/utils/dateTimeUtils';
+import { parseFamilyClinicIdFromUrlParams } from '@/utils/familyClinicUtils';
+import { useFamilyClinicInfo } from '@/hooks/family_clinic/useFamilyClinicInfo';
+import Loading from '@/components/loading/Loading';
+import ErrorScreen from '@/components/screens/ErrorScreen';
 
 const steps = ['Select Appointment', 'Enter Contact Info'];
 
 export default function BookAppointment() {
+    const params = useParams();
+    const familyClinicId = parseFamilyClinicIdFromUrlParams(params);
     const { setToaster } = useToaster();
     const [step, setStep] = useState(0);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -42,6 +48,8 @@ export default function BookAppointment() {
     });
 
     const router = useRouter();
+
+    const { data: clinic, isLoading, error } = useFamilyClinicInfo(familyClinicId);
     const { mutate: createAppointment, isPending } = useCreateAppointment();
 
     const updateAppointmentField: SetAppointmentField = (field: string, value: unknown) => {
@@ -136,11 +144,19 @@ export default function BookAppointment() {
         );
     };
 
+    if (isLoading) {
+        return <Loading />;
+    }
+
+    if (error || !clinic) {
+        return <ErrorScreen message="Error loading clinic information." />;
+    }
+
     return (
         <ModuleContainer>
             <FormContainer>
                 <Typography variant="h1" gutterBottom>
-                    Greenleaf Family Clinic
+                    {clinic.name}
                 </Typography>
                 <Typography variant="h3" gutterBottom>
                     Book an Appointment

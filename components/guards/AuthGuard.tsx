@@ -24,7 +24,7 @@ const AuthGuard = ({ children, reroute = '/login', showToast = true }: AuthGuard
             }
             router.push(reroute || '/login');
         }
-    }, [isAuthed, isInitialized, reroute, router, setToaster]);
+    }, [isInitialized, isAuthed, reroute, router, showToast, setToaster]);
 
     if (!isAuthed || !isInitialized) {
         return <Loading />;

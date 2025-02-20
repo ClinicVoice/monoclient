@@ -16,6 +16,7 @@ export interface CreateAppointmentForm {
     pharmacy: string;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type SetAppointmentField = (field: keyof CreateAppointmentForm, value: any) => void;
 
 export interface CreateAppointmentRequest {

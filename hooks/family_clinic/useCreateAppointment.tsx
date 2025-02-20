@@ -15,8 +15,5 @@ export const useCreateAppointment = () => {
             queryClient.invalidateQueries({ queryKey: ['appointments'] });
             queryClient.invalidateQueries({ queryKey: ['availableAppointments'] });
         },
-        onError: (error) => {
-            console.error('Failed to create appointment:', error.response?.data);
-        },
     });
 };
