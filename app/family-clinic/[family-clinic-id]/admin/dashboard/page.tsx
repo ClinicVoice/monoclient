@@ -1,7 +1,7 @@
 'use client';
 
 import { useParams, useRouter } from 'next/navigation';
-import { Typography, Button, Paper, List, ListItemButton, ListItemText, Box } from '@mui/material';
+import { Typography, Button } from '@mui/material';
 import LogoutButton from '@/components/buttons/LogoutButton';
 import RecentAppointmentRecordRequestsTable from '@/components/family-clinic/admin/RecentAppointmentRecordRequestsTable';
 import AppointmentRecordRequestsByDateTable from '@/components/family-clinic/admin/AppointmentRecordRequestsByDateTable';
