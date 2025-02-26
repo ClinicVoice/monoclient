@@ -7,6 +7,7 @@ import {
 } from '@/types/family_clinic/appointment_records';
 import { FamilyClinic } from '@/types/family_clinic/family_clinic';
 import { mockFamilyClinic } from '@/mocks/mock_family_clinic';
+import { GetRecentTestResultsRequestsResponse } from '@/types/family_clinic/test_results_requests';
 
 /**
  * Create a new appointment
@@ -72,4 +73,21 @@ export const getFamilyClinicInfo = async (familyClinicId: string): Promise<Famil
     return new Promise((resolve) => {
         setTimeout(() => resolve(mockFamilyClinic), 500);
     });
+};
+
+/**
+ * Fetch the most recent test results requests.
+ * @param limit - Number of recent test results requests to fetch (default is 5).
+ * @returns List of recent test results requests.
+ */
+export const getRecentTestResultsRequests = async (
+    limit: number = 5,
+): Promise<GetRecentTestResultsRequestsResponse> => {
+    const response = await axiosInstance.get(
+        '/internal/family_clinic/tests/results_request/recent',
+        {
+            params: { limit },
+        },
+    );
+    return response.data;
 };

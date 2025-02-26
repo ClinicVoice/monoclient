@@ -1,5 +1,6 @@
 import { AppointmentRecordRequest } from '@/types/family_clinic/appointment_records';
 import { format } from 'date-fns';
+import { TestResultsRequest } from '@/types/family_clinic/test_results_requests';
 
 export const exportAppointmentRecordRequestsToCSV = (
     appointments: AppointmentRecordRequest[],
@@ -50,6 +51,46 @@ export const exportAppointmentRecordRequestsToCSV = (
             app.pharmacy,
             app.notes,
             new Date(Number(app.request_timestamp) * 1000).toLocaleString(),
+        ]),
+    ]
+        .map((e) => e.join(','))
+        .join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.setAttribute('download', `${filenamePrefix}-${timestamp}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+};
+
+export const exportTestResultsRequestsToCSV = (
+    testResultsRequests: TestResultsRequest[],
+    filenamePrefix: string,
+) => {
+    if (!testResultsRequests.length) {
+        alert('No data to export');
+        return;
+    }
+
+    const timestamp = format(new Date(), 'yyyyMMdd-HHmmss');
+    const csvContent = [
+        [
+            'ID',
+            'First Name',
+            'Last Name',
+            'Health Card Number',
+            'Requested Item',
+            'Request Timestamp',
+        ],
+        ...testResultsRequests.map((request) => [
+            request.id,
+            request.first_name,
+            request.last_name,
+            request.health_card_number,
+            request.requested_item,
+            new Date(Number(request.request_timestamp) * 1000).toLocaleString(),
         ]),
     ]
         .map((e) => e.join(','))
