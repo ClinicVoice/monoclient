@@ -1,35 +1,22 @@
 'use client';
 
-import { AppBar, Toolbar, Typography, Box } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { AppBar, Toolbar } from '@mui/material';
 import Image from 'next/image';
-import Link from 'next/link';
-
-const LogoContainer = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(1),
-}));
+import { LogoContainer } from '@/components/navbar/styles';
+import { useRouter } from 'next/navigation';
 
 export default function Navbar() {
+    const router = useRouter();
     return (
         <AppBar position="sticky" color="secondary" elevation={1}>
             <Toolbar>
-                <LogoContainer>
+                <LogoContainer onClick={() => router.push('/')}>
                     <Image
-                        src="/assets/logos/light_logo.png"
+                        src="/assets/logos/light_logo_brand.png"
                         alt="Company Logo"
-                        width={40}
-                        height={40}
+                        height={60}
+                        width={240}
                     />
-                    <Typography
-                        variant="h2"
-                        component={Link}
-                        href="/"
-                        sx={{ textDecoration: 'none', color: 'inherit' }}
-                    >
-                        ClinicVoice AI
-                    </Typography>
                 </LogoContainer>
             </Toolbar>
         </AppBar>
