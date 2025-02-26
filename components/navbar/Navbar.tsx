@@ -16,7 +16,12 @@ export default function Navbar() {
         <AppBar position="sticky" color="secondary" elevation={1}>
             <Toolbar>
                 <LogoContainer>
-                    <Image src="/assets/logos/logo.png" alt="Company Logo" width={40} height={40} />
+                    <Image
+                        src="/assets/logos/light_logo.png"
+                        alt="Company Logo"
+                        width={40}
+                        height={40}
+                    />
                     <Typography
                         variant="h2"
                         component={Link}
