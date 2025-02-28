@@ -12,7 +12,6 @@ export const DashboardContainer = styled(Container)(({ theme }) => ({
 export const ButtonContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
-    width: '100%',
-    maxWidth: 800,
+    width: '90vw',
     marginBottom: theme.spacing(2),
 }));

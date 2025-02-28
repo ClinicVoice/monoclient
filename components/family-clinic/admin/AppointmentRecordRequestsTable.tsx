@@ -16,6 +16,7 @@ import {
 import { TableCard } from '@/components/family-clinic/admin/styles';
 import { AppointmentRecordRequest } from '@/types/family_clinic/appointment_records';
 import { exportAppointmentRecordRequestsToCSV } from '@/utils/exportUtils';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 
 interface AppointmentsTableProps {
     title: string;
@@ -55,6 +56,7 @@ export default function AppointmentRecordRequestsTable({
                         onClick={() =>
                             exportAppointmentRecordRequestsToCSV(appointments, onExportFilename)
                         }
+                        startIcon={<FileDownloadIcon />}
                     >
                         Export to CSV
                     </Button>

@@ -17,6 +17,7 @@ import {
 import { TableCard } from '@/components/family-clinic/admin/styles';
 import { TestResultsRequest } from '@/types/family_clinic/test_results_requests';
 import { exportTestResultsRequestsToCSV } from '@/utils/exportUtils';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 
 interface TestResultsRequestsTableProps {
     title: string;
@@ -56,6 +57,7 @@ export default function TestResultsRequestsTable({
                         onClick={() =>
                             exportTestResultsRequestsToCSV(testResultsRequests, onExportFilename)
                         }
+                        startIcon={<FileDownloadIcon />}
                     >
                         Export to CSV
                     </Button>
