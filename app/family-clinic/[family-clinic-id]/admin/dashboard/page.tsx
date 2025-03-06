@@ -9,6 +9,8 @@ import Loading from '@/components/loading/Loading';
 import ErrorScreen from '@/components/screens/ErrorScreen';
 import { parseFamilyClinicIdFromUrlParams } from '@/utils/familyClinicUtils';
 import { AppointmentRecordRequestsCalendarView } from '@/components/family-clinic/admin/AppointmentRecordRequestsCalendarView/AppointmentRecordRequestsCalendarView';
+import TestResultsRequestsTable from '@/components/family-clinic/admin/TestResultsRequestsTable';
+import RecentTestResultsRequestsTable from '@/components/family-clinic/admin/RecentTestResultsRequestsTable';
 
 export default function AdminDashboard() {
     const params = useParams();
@@ -36,7 +38,11 @@ export default function AdminDashboard() {
                 }}
             >
                 <Box sx={{ textAlign: 'left' }}>
-                    <Button variant="contained" color="secondary" onClick={() => router.push('/')}>
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={() => router.push(`/family-clinic/${familyClinicId}`)}
+                    >
                         Back to Home
                     </Button>
                 </Box>
@@ -54,6 +60,8 @@ export default function AdminDashboard() {
             </Box>
 
             <AppointmentRecordRequestsCalendarView />
+
+            <RecentTestResultsRequestsTable />
         </DashboardContainer>
     );
 }

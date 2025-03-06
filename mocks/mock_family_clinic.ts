@@ -16,6 +16,10 @@ export const mockFamilyClinic: FamilyClinic = {
         Saturday: { open: '9:00 AM', close: '2:00 PM' },
         Sunday: null,
     },
-    providers: ['Junyi Li', 'Xiao Qing Li', 'Gordon Yao'],
+    providers: [
+        { name: 'Junyi Li', appointmentDuration: 15 },
+        { name: 'Xiao Qing Li', appointmentDuration: 10 },
+        { name: 'Gordon Yao', appointmentDuration: 15 },
+    ],
     appointmentTypes: ['Dr. Gordon Yao Appointment', 'Dr. Junyi (Jesse) Li Appointment'],
 };

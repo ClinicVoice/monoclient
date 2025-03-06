@@ -9,12 +9,11 @@ import {
     ToggleButtonGroup,
     IconButton,
     Button,
-    TextField,
 } from '@mui/material';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { exportAppointmentRecordRequestsToCSV } from '@/utils/exportUtils';
 import { getScheduledAppointmentsByDate } from '@/services/familyClinicService';
 import { AppointmentRecordRequest } from '@/types/family_clinic/appointment_records';
@@ -87,7 +86,7 @@ export const AppointmentRecordRequestsCalendarView: React.FC = () => {
     };
 
     return (
-        <Box sx={{ p: 2, width: '100%' }}>
+        <Box sx={{ p: 2, width: '100%', mb: 4 }}>
             <Box
                 sx={{
                     mb: 2,

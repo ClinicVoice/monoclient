@@ -14,6 +14,8 @@ import {
     SetAppointmentField,
 } from '@/types/family_clinic/appointment_records';
 import { StepCard } from '@/app/family-clinic/[family-clinic-id]/book-appointment/styles';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 
 interface Step2Props {
     appointment: CreateAppointmentForm;
@@ -114,17 +116,26 @@ const Step2EnterContactInfo = ({
                             <MenuItem value="Other">Other</MenuItem>
                         </Select>
                     </FormControl>
-                    <TextField
-                        fullWidth
-                        margin="normal"
-                        label="Birthday"
-                        type="date"
-                        InputLabelProps={{ shrink: true }}
-                        value={appointment.birthday}
-                        onChange={(e) => updateAppointmentField('birthday', e.target.value)}
-                        error={!!errors.birthday}
-                        helperText={errors.birthday}
-                    />
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DatePicker
+                            label="Birthday"
+                            value={appointment.birthday ? new Date(appointment.birthday) : null}
+                            onChange={(newDate) => {
+                                if (newDate) {
+                                    updateAppointmentField(
+                                        'birthday',
+                                        newDate.toISOString().split('T')[0],
+                                    );
+                                }
+                            }}
+                            sx={{
+                                width: '100%',
+                                marginTop: '0.5rem',
+                            }}
+                            minDate={new Date(1900, 0, 1)}
+                            maxDate={new Date()}
+                        />
+                    </LocalizationProvider>
                 </>
             )}
 

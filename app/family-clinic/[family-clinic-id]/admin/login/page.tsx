@@ -91,7 +91,7 @@ export default function AdminLogin() {
                                 variant="contained"
                                 color="secondary"
                                 fullWidth
-                                onClick={() => router.push('/')}
+                                onClick={() => router.push(`/family-clinic/${familyClinicId}`)}
                             >
                                 Back
                             </Button>
