@@ -12,12 +12,17 @@ import {
     LoginCard,
     LoginContainer,
 } from '@/app/family-clinic/[family-clinic-id]/admin/login/styles';
+import { useFamilyClinicInfo } from '@/hooks/family_clinic/useFamilyClinicInfo';
+import { parseFamilyClinicIdFromUrlParams } from '@/utils/familyClinicUtils';
+import Loading from '@/components/loading/Loading';
+import ErrorScreen from '@/components/screens/ErrorScreen';
 
 export default function AdminLogin() {
     const router = useRouter();
     const { setToaster } = useToaster();
     const params = useParams();
-    const familyClinicId = params['family-clinic-id'];
+    const familyClinicId = parseFamilyClinicIdFromUrlParams(params);
+    const { data: clinic, isLoading, error } = useFamilyClinicInfo(familyClinicId);
 
     const loginMutation = useLogin();
 
@@ -39,11 +44,19 @@ export default function AdminLogin() {
         });
     };
 
+    if (isLoading) {
+        return <Loading />;
+    }
+
+    if (error || !clinic) {
+        return <ErrorScreen message="Error loading clinic information." />;
+    }
+
     return (
         <ModuleContainer>
             <LoginContainer>
                 <Typography variant="h1" gutterBottom>
-                    Greenleaf Family Clinic
+                    {clinic.name}
                 </Typography>
                 <LoginCard>
                     <Typography variant="h3" gutterBottom>
