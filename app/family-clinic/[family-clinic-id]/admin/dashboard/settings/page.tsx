@@ -118,6 +118,10 @@ export default function AdminSettings() {
 
     return (
         <Box sx={{ p: 3 }}>
+            <Alert severity="warning" sx={{ mb: 3 }}>
+                This settings page is in demo mode. Changes will not be saved to the backend.
+            </Alert>
+
             <Typography variant="h3" gutterBottom>
                 Clinic Restrictions
             </Typography>
