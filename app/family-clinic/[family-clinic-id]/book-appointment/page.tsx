@@ -129,7 +129,7 @@ export default function BookAppointment() {
                 appointment_date_time: appointmentDateTime,
                 birth_date: appointment.birthday,
                 sex: appointment.sex,
-                pharmacy: appointment.pharmacy,
+                pharmacy: '',
                 notes: appointment.note,
             },
             {

@@ -159,16 +159,6 @@ const Step2EnterContactInfo = ({
                 error={!!errors.email}
                 helperText={errors.email}
             />
-            <TextField
-                fullWidth
-                margin="normal"
-                label="Pharmacy"
-                type="pharmacy"
-                value={appointment.pharmacy}
-                onChange={(e) => updateAppointmentField('pharmacy', e.target.value)}
-                error={!!errors.email}
-                helperText={errors.email}
-            />
 
             <Grid container spacing={2} mt={2} justifyContent="center">
                 <Grid item>
