@@ -135,7 +135,7 @@ export default function BookAppointment() {
             {
                 onSuccess: () => {
                     setToaster('Appointment successfully booked!', 'success');
-                    router.push('/');
+                    router.push(`/family-clinic/${familyClinicId}`);
                 },
                 onError: () => {
                     setToaster('Failed to book appointment. Please try again.', 'error');

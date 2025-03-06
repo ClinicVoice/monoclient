@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     FormControl,
     InputLabel,
@@ -10,22 +10,70 @@ import {
     CircularProgress,
     Alert,
 } from '@mui/material';
-import {
-    CreateAppointmentForm,
-    SetAppointmentField,
-} from '@/types/family_clinic/appointment_records';
 import { StepCard } from '@/app/family-clinic/[family-clinic-id]/book-appointment/styles';
 import { useRouter, useParams } from 'next/navigation';
 import { useAvailableAppointmentSlots } from '@/hooks/family_clinic/useAvailableAppointmentSlots';
 import { extractStartTimes } from '@/utils/dateTimeUtils';
 import { useFamilyClinicInfo } from '@/hooks/family_clinic/useFamilyClinicInfo';
 import { parseFamilyClinicIdFromUrlParams } from '@/utils/familyClinicUtils';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
+import {
+    CreateAppointmentForm,
+    SetAppointmentField,
+} from '@/types/family_clinic/appointment_records';
+import {
+    FamilyClinicProvider,
+    FamilyClinicRestrictions,
+} from '@/types/family_clinic/family_clinic';
+import { parse } from 'date-fns';
 
 interface Step1Props {
     appointment: CreateAppointmentForm;
     updateAppointmentField: SetAppointmentField;
     errors: { [key: string]: string };
     handleNext: () => void;
+}
+
+// TODO: move logic to backend
+function isSlotRestricted(
+    slot: string,
+    appointmentDate: string,
+    restrictions?: FamilyClinicRestrictions,
+): boolean {
+    const dateObj = new Date(appointmentDate);
+    const slotDate = parse(slot, 'h:mm a', dateObj);
+
+    if (!restrictions) {
+        return false;
+    }
+    if (restrictions.unavailableDays && restrictions.unavailableDays.includes(appointmentDate)) {
+        return true;
+    }
+    if (restrictions.dailyUnavailableRanges) {
+        for (const range of restrictions.dailyUnavailableRanges) {
+            const startTime = parse(range.start, 'HH:mm', dateObj);
+            const endTime = parse(range.end, 'HH:mm', dateObj);
+            if (slotDate >= startTime && slotDate < endTime) {
+                return true;
+            }
+        }
+    }
+    if (restrictions.restrictedDays) {
+        const restrictedForDate = restrictions.restrictedDays.find(
+            (r) => r.date === appointmentDate,
+        );
+        if (restrictedForDate) {
+            for (const range of restrictedForDate.unavailableRanges) {
+                const startTime = parse(range.start, 'HH:mm', dateObj);
+                const endTime = parse(range.end, 'HH:mm', dateObj);
+                if (slotDate >= startTime && slotDate < endTime) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
 }
 
 const Step1SelectAppointment = ({
@@ -39,16 +87,30 @@ const Step1SelectAppointment = ({
     const familyClinicId = parseFamilyClinicIdFromUrlParams(params);
 
     const [selectedTime, setSelectedTime] = useState('');
+    const [appointmentDuration, setAppointmentDuration] = useState(30);
 
     const {
         data: clinic,
         isLoading: clinicLoading,
         error: clinicError,
     } = useFamilyClinicInfo(familyClinicId);
-    const { data, isLoading: slotsLoading } = useAvailableAppointmentSlots(appointment.date, 30);
+    const { data, isLoading: slotsLoading } = useAvailableAppointmentSlots(
+        appointment.date,
+        appointmentDuration,
+    );
 
     const availableSlots = data?.available_times || [];
     const formattedSlots = extractStartTimes(availableSlots);
+
+    const filteredSlots = formattedSlots.filter(
+        (slot) => !isSlotRestricted(slot, appointment.date, clinic?.restrictions),
+    );
+
+    const providerDurationMap =
+        clinic?.providers.reduce<Record<string, number>>((acc, provider: FamilyClinicProvider) => {
+            acc[provider.name] = provider.appointmentDuration;
+            return acc;
+        }, {}) || {};
 
     useEffect(() => {
         if (selectedTime) {
@@ -72,11 +134,15 @@ const Step1SelectAppointment = ({
                     sx={{ textAlign: 'left' }}
                     label="Provider"
                     value={appointment.provider}
-                    onChange={(e) => updateAppointmentField('provider', e.target.value)}
+                    onChange={(e) => {
+                        const selectedProviderName = e.target.value;
+                        updateAppointmentField('provider', selectedProviderName);
+                        setAppointmentDuration(providerDurationMap[selectedProviderName] || 30);
+                    }}
                 >
-                    {clinic.providers.map((provider: string, index: number) => (
-                        <MenuItem key={index} value={provider}>
-                            {provider}
+                    {clinic.providers.map((provider, index) => (
+                        <MenuItem key={index} value={provider.name}>
+                            {provider.name}
                         </MenuItem>
                     ))}
                 </Select>
@@ -116,20 +182,26 @@ const Step1SelectAppointment = ({
             )}
 
             {appointment.provider && appointment.appointment_type && (
-                <>
-                    <TextField
-                        fullWidth
-                        margin="normal"
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DatePicker
                         label="Date"
-                        type="date"
-                        InputLabelProps={{ shrink: true }}
-                        value={appointment.date}
-                        onChange={(e) => updateAppointmentField('date', e.target.value)}
-                        error={!!errors.date}
-                        helperText={errors.date}
-                        inputProps={{ min: new Date().toISOString().split('T')[0] }}
+                        value={appointment.date ? new Date(appointment.date) : null}
+                        onChange={(newDate) => {
+                            if (newDate) {
+                                updateAppointmentField('date', newDate.toISOString().split('T')[0]);
+                            }
+                        }}
+                        minDate={new Date()}
+                        maxDate={
+                            new Date(
+                                new Date().getFullYear() + 50,
+                                new Date().getMonth(),
+                                new Date().getDate(),
+                            )
+                        }
+                        sx={{ width: '100%', marginTop: '0.5rem' }}
                     />
-                </>
+                </LocalizationProvider>
             )}
 
             {appointment.date && (
@@ -138,7 +210,7 @@ const Step1SelectAppointment = ({
                         <Grid container justifyContent="center" mt={2}>
                             <CircularProgress />
                         </Grid>
-                    ) : formattedSlots.length === 0 ? (
+                    ) : filteredSlots.length === 0 ? (
                         <Alert severity="warning" sx={{ mt: 2 }}>
                             No available appointment slots for this date. Please select another
                             date.
@@ -152,7 +224,7 @@ const Step1SelectAppointment = ({
                                 value={selectedTime}
                                 onChange={(e) => setSelectedTime(e.target.value)}
                             >
-                                {formattedSlots.map((slot, index) => (
+                                {filteredSlots.map((slot, index) => (
                                     <MenuItem key={index} value={slot}>
                                         {slot}
                                     </MenuItem>
@@ -165,7 +237,11 @@ const Step1SelectAppointment = ({
 
             <Grid container spacing={2} mt={2} justifyContent="center">
                 <Grid item>
-                    <Button variant="contained" color="secondary" onClick={() => router.push('/')}>
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={() => router.push(`/family-clinic/${familyClinicId}`)}
+                    >
                         Back
                     </Button>
                 </Grid>

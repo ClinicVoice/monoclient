@@ -1,36 +1,22 @@
 'use client';
 
-import { useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Typography, Button, Box } from '@mui/material';
 import LogoutButton from '@/components/buttons/LogoutButton';
-import RecentAppointmentRecordRequestsTable from '@/components/family-clinic/admin/RecentAppointmentRecordRequestsTable';
-import AppointmentRecordRequestsByDateTable from '@/components/family-clinic/admin/AppointmentRecordRequestsByDateTable';
-import RecentTestResultsRequestsTable from '@/components/family-clinic/admin/RecentTestResultsRequestsTable';
-import {
-    DashboardContainer,
-    ButtonContainer,
-} from '@/app/family-clinic/[family-clinic-id]/admin/dashboard/styles';
+import SettingsIcon from '@mui/icons-material/Settings';
+import { DashboardContainer } from '@/app/family-clinic/[family-clinic-id]/admin/dashboard/styles';
 import { useFamilyClinicInfo } from '@/hooks/family_clinic/useFamilyClinicInfo';
 import Loading from '@/components/loading/Loading';
 import ErrorScreen from '@/components/screens/ErrorScreen';
 import { parseFamilyClinicIdFromUrlParams } from '@/utils/familyClinicUtils';
+import { AppointmentRecordRequestsCalendarView } from '@/components/family-clinic/admin/AppointmentRecordRequestsCalendarView/AppointmentRecordRequestsCalendarView';
+import RecentTestResultsRequestsTable from '@/components/family-clinic/admin/RecentTestResultsRequestsTable';
 
 export default function AdminDashboard() {
     const params = useParams();
     const familyClinicId = parseFamilyClinicIdFromUrlParams(params);
     const router = useRouter();
     const { data: clinic, isLoading, error } = useFamilyClinicInfo(familyClinicId);
-
-    const recentAppointmentsRef = useRef(null);
-    const appointmentsByDateRef = useRef(null);
-    const recentTestResultsRef = useRef(null);
-
-    const scrollToSection = (ref: React.RefObject<HTMLElement>) => {
-        if (ref.current) {
-            ref.current.scrollIntoView({ behavior: 'smooth' });
-        }
-    };
 
     if (isLoading) {
         return <Loading />;
@@ -42,55 +28,58 @@ export default function AdminDashboard() {
 
     return (
         <DashboardContainer>
-            <Typography variant="h1" gutterBottom>
-                {clinic.name}
-            </Typography>
-
-            <Typography variant="h3" gutterBottom>
-                Admin Dashboard
-            </Typography>
-
-            <ButtonContainer>
-                <Button variant="contained" color="secondary" onClick={() => router.push('/')}>
-                    Back to Home
-                </Button>
-                <LogoutButton redirectTo={`/family-clinic/${familyClinicId}`} />
-            </ButtonContainer>
-
-            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 3 }}>
-                <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
+            <Box
+                sx={{
+                    display: 'grid',
+                    gridTemplateColumns: '1fr auto 1fr',
+                    alignItems: 'center',
+                    width: '100%',
+                    mb: 2,
+                }}
+            >
+                <Box sx={{ textAlign: 'left' }}>
                     <Button
                         variant="contained"
-                        onClick={() => scrollToSection(recentAppointmentsRef)}
+                        color="secondary"
+                        onClick={() => router.push(`/family-clinic/${familyClinicId}`)}
                     >
-                        Recent Appointment Requests
+                        Back to Home
                     </Button>
+                </Box>
+                <Box sx={{ textAlign: 'center' }}>
+                    <Typography variant="h1" gutterBottom>
+                        {clinic.name}
+                    </Typography>
+                    <Typography variant="h3" gutterBottom>
+                        Admin Dashboard
+                    </Typography>
+                </Box>
+                <Box
+                    sx={{
+                        textAlign: 'right',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'flex-end',
+                        gap: 1,
+                    }}
+                >
                     <Button
                         variant="contained"
-                        onClick={() => scrollToSection(appointmentsByDateRef)}
+                        color="secondary"
+                        startIcon={<SettingsIcon />}
+                        onClick={() =>
+                            router.push(`/family-clinic/${familyClinicId}/admin/dashboard/settings`)
+                        }
                     >
-                        Appointment Requests by Date
+                        Settings
                     </Button>
-                    <Button
-                        variant="contained"
-                        onClick={() => scrollToSection(recentTestResultsRef)}
-                    >
-                        Recent Test Results Requests
-                    </Button>
+                    <LogoutButton redirectTo={`/family-clinic/${familyClinicId}`} />
                 </Box>
             </Box>
 
-            <Box ref={recentAppointmentsRef}>
-                <RecentAppointmentRecordRequestsTable />
-            </Box>
+            <AppointmentRecordRequestsCalendarView />
 
-            <Box ref={appointmentsByDateRef} mt={4}>
-                <AppointmentRecordRequestsByDateTable />
-            </Box>
-
-            <Box ref={recentTestResultsRef} mt={4}>
-                <RecentTestResultsRequestsTable />
-            </Box>
+            <RecentTestResultsRequestsTable />
         </DashboardContainer>
     );
 }
