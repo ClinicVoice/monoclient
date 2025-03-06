@@ -1,3 +1,19 @@
+export interface TimeRange {
+    start: string;
+    end: string;
+}
+
+export interface RestrictedDay {
+    date: string;
+    unavailableRanges: TimeRange[];
+}
+
+export interface FamilyClinicRestrictions {
+    unavailableDays?: string[];
+    dailyUnavailableRanges?: TimeRange[];
+    restrictedDays?: RestrictedDay[];
+}
+
 export interface FamilyClinicProvider {
     name: string;
     appointmentDuration: number;
@@ -17,4 +33,5 @@ export interface FamilyClinic {
     openingHours: FamilyClinicOpeningHours;
     providers: FamilyClinicProvider[];
     appointmentTypes: string[];
+    restrictions?: FamilyClinicRestrictions;
 }

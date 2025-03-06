@@ -3,13 +3,13 @@
 import { useParams, useRouter } from 'next/navigation';
 import { Typography, Button, Box } from '@mui/material';
 import LogoutButton from '@/components/buttons/LogoutButton';
+import SettingsIcon from '@mui/icons-material/Settings';
 import { DashboardContainer } from '@/app/family-clinic/[family-clinic-id]/admin/dashboard/styles';
 import { useFamilyClinicInfo } from '@/hooks/family_clinic/useFamilyClinicInfo';
 import Loading from '@/components/loading/Loading';
 import ErrorScreen from '@/components/screens/ErrorScreen';
 import { parseFamilyClinicIdFromUrlParams } from '@/utils/familyClinicUtils';
 import { AppointmentRecordRequestsCalendarView } from '@/components/family-clinic/admin/AppointmentRecordRequestsCalendarView/AppointmentRecordRequestsCalendarView';
-import TestResultsRequestsTable from '@/components/family-clinic/admin/TestResultsRequestsTable';
 import RecentTestResultsRequestsTable from '@/components/family-clinic/admin/RecentTestResultsRequestsTable';
 
 export default function AdminDashboard() {
@@ -54,7 +54,25 @@ export default function AdminDashboard() {
                         Admin Dashboard
                     </Typography>
                 </Box>
-                <Box sx={{ textAlign: 'right' }}>
+                <Box
+                    sx={{
+                        textAlign: 'right',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'flex-end',
+                        gap: 1,
+                    }}
+                >
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        startIcon={<SettingsIcon />}
+                        onClick={() =>
+                            router.push(`/family-clinic/${familyClinicId}/admin/dashboard/settings`)
+                        }
+                    >
+                        Settings
+                    </Button>
                     <LogoutButton redirectTo={`/family-clinic/${familyClinicId}`} />
                 </Box>
             </Box>

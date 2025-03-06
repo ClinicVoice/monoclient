@@ -1,6 +1,4 @@
-'use client';
-
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     FormControl,
     InputLabel,
@@ -24,13 +22,58 @@ import {
     CreateAppointmentForm,
     SetAppointmentField,
 } from '@/types/family_clinic/appointment_records';
-import { FamilyClinicProvider } from '@/types/family_clinic/family_clinic';
+import {
+    FamilyClinicProvider,
+    FamilyClinicRestrictions,
+} from '@/types/family_clinic/family_clinic';
+import { parse } from 'date-fns';
 
 interface Step1Props {
     appointment: CreateAppointmentForm;
     updateAppointmentField: SetAppointmentField;
     errors: { [key: string]: string };
     handleNext: () => void;
+}
+
+// TODO: move logic to backend
+function isSlotRestricted(
+    slot: string,
+    appointmentDate: string,
+    restrictions?: FamilyClinicRestrictions,
+): boolean {
+    const dateObj = new Date(appointmentDate);
+    const slotDate = parse(slot, 'h:mm a', dateObj);
+
+    if (!restrictions) {
+        return false;
+    }
+    if (restrictions.unavailableDays && restrictions.unavailableDays.includes(appointmentDate)) {
+        return true;
+    }
+    if (restrictions.dailyUnavailableRanges) {
+        for (const range of restrictions.dailyUnavailableRanges) {
+            const startTime = parse(range.start, 'HH:mm', dateObj);
+            const endTime = parse(range.end, 'HH:mm', dateObj);
+            if (slotDate >= startTime && slotDate < endTime) {
+                return true;
+            }
+        }
+    }
+    if (restrictions.restrictedDays) {
+        const restrictedForDate = restrictions.restrictedDays.find(
+            (r) => r.date === appointmentDate,
+        );
+        if (restrictedForDate) {
+            for (const range of restrictedForDate.unavailableRanges) {
+                const startTime = parse(range.start, 'HH:mm', dateObj);
+                const endTime = parse(range.end, 'HH:mm', dateObj);
+                if (slotDate >= startTime && slotDate < endTime) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
 }
 
 const Step1SelectAppointment = ({
@@ -58,6 +101,10 @@ const Step1SelectAppointment = ({
 
     const availableSlots = data?.available_times || [];
     const formattedSlots = extractStartTimes(availableSlots);
+
+    const filteredSlots = formattedSlots.filter(
+        (slot) => !isSlotRestricted(slot, appointment.date, clinic?.restrictions),
+    );
 
     const providerDurationMap =
         clinic?.providers.reduce<Record<string, number>>((acc, provider: FamilyClinicProvider) => {
@@ -152,10 +199,7 @@ const Step1SelectAppointment = ({
                                 new Date().getDate(),
                             )
                         }
-                        sx={{
-                            width: '100%',
-                            marginTop: '0.5rem',
-                        }}
+                        sx={{ width: '100%', marginTop: '0.5rem' }}
                     />
                 </LocalizationProvider>
             )}
@@ -166,7 +210,7 @@ const Step1SelectAppointment = ({
                         <Grid container justifyContent="center" mt={2}>
                             <CircularProgress />
                         </Grid>
-                    ) : formattedSlots.length === 0 ? (
+                    ) : filteredSlots.length === 0 ? (
                         <Alert severity="warning" sx={{ mt: 2 }}>
                             No available appointment slots for this date. Please select another
                             date.
@@ -180,7 +224,7 @@ const Step1SelectAppointment = ({
                                 value={selectedTime}
                                 onChange={(e) => setSelectedTime(e.target.value)}
                             >
-                                {formattedSlots.map((slot, index) => (
+                                {filteredSlots.map((slot, index) => (
                                     <MenuItem key={index} value={slot}>
                                         {slot}
                                     </MenuItem>

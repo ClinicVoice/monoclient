@@ -22,4 +22,14 @@ export const mockFamilyClinic: FamilyClinic = {
         { name: 'Gordon Yao', appointmentDuration: 15 },
     ],
     appointmentTypes: ['Dr. Gordon Yao Appointment', 'Dr. Junyi (Jesse) Li Appointment'],
+    restrictions: {
+        unavailableDays: ['2023-12-25', '2024-01-01'],
+        dailyUnavailableRanges: [{ start: '12:00', end: '13:00' }],
+        restrictedDays: [
+            {
+                date: '2023-11-24',
+                unavailableRanges: [{ start: '14:00', end: '16:00' }],
+            },
+        ],
+    },
 };

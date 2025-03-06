@@ -1,8 +1,8 @@
 'use client';
 
 import React from 'react';
-import { format, startOfWeek, endOfWeek, eachDayOfInterval } from 'date-fns';
-import { Box, Paper, Typography } from '@mui/material';
+import { startOfWeek, endOfWeek, eachDayOfInterval } from 'date-fns';
+import { Box, Typography } from '@mui/material';
 import { AppointmentRecordRequest } from '@/types/family_clinic/appointment_records';
 import { MonthDayCell } from '@/components/family-clinic/admin/AppointmentRecordRequestsCalendarView/MonthDayCell';
 
