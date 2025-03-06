@@ -3,10 +3,7 @@
 import { useParams, useRouter } from 'next/navigation';
 import { Typography, Button, Box } from '@mui/material';
 import LogoutButton from '@/components/buttons/LogoutButton';
-import {
-    DashboardContainer,
-    ButtonContainer,
-} from '@/app/family-clinic/[family-clinic-id]/admin/dashboard/styles';
+import { DashboardContainer } from '@/app/family-clinic/[family-clinic-id]/admin/dashboard/styles';
 import { useFamilyClinicInfo } from '@/hooks/family_clinic/useFamilyClinicInfo';
 import Loading from '@/components/loading/Loading';
 import ErrorScreen from '@/components/screens/ErrorScreen';
@@ -29,20 +26,32 @@ export default function AdminDashboard() {
 
     return (
         <DashboardContainer>
-            <Typography variant="h1" gutterBottom>
-                {clinic.name}
-            </Typography>
-
-            <Typography variant="h3" gutterBottom>
-                Admin Dashboard
-            </Typography>
-
-            <ButtonContainer>
-                <Button variant="contained" color="secondary" onClick={() => router.push('/')}>
-                    Back to Home
-                </Button>
-                <LogoutButton redirectTo={`/family-clinic/${familyClinicId}`} />
-            </ButtonContainer>
+            <Box
+                sx={{
+                    display: 'grid',
+                    gridTemplateColumns: '1fr auto 1fr',
+                    alignItems: 'center',
+                    width: '100%',
+                    mb: 2,
+                }}
+            >
+                <Box sx={{ textAlign: 'left' }}>
+                    <Button variant="contained" color="secondary" onClick={() => router.push('/')}>
+                        Back to Home
+                    </Button>
+                </Box>
+                <Box sx={{ textAlign: 'center' }}>
+                    <Typography variant="h1" gutterBottom>
+                        {clinic.name}
+                    </Typography>
+                    <Typography variant="h3" gutterBottom>
+                        Admin Dashboard
+                    </Typography>
+                </Box>
+                <Box sx={{ textAlign: 'right' }}>
+                    <LogoutButton redirectTo={`/family-clinic/${familyClinicId}`} />
+                </Box>
+            </Box>
 
             <AppointmentRecordRequestsCalendarView />
         </DashboardContainer>
