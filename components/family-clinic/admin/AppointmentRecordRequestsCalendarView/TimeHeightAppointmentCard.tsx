@@ -54,7 +54,9 @@ export const TimeHeightAppointmentCard = ({
                 cursor: 'pointer',
                 transition: 'box-shadow 0.3s',
                 height,
+                overflowY: 'hidden',
                 overflowX: 'auto',
+                scrollbarGutter: 'stable',
                 '&:hover': {
                     boxShadow: 3,
                 },
@@ -65,7 +67,7 @@ export const TimeHeightAppointmentCard = ({
                     display: 'flex',
                     flexDirection: 'row',
                     alignItems: 'center',
-                    gap: 2,
+                    gap: 1,
                     whiteSpace: 'nowrap',
                 }}
             >
