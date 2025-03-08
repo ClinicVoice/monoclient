@@ -49,8 +49,7 @@ export const CalendarMonthAppointmentCard = ({ appointment, onClick }: Appointme
                 cursor: 'pointer',
                 transition: 'box-shadow 0.3s',
                 overflowY: 'hidden',
-                overflowX: 'auto',
-                scrollbarGutter: 'stable',
+                overflowX: 'hidden',
                 '&:hover': {
                     boxShadow: 3,
                 },

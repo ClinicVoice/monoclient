@@ -55,8 +55,7 @@ export const TimeHeightAppointmentCard = ({
                 transition: 'box-shadow 0.3s',
                 height,
                 overflowY: 'hidden',
-                overflowX: 'auto',
-                scrollbarGutter: 'stable',
+                overflowX: 'hidden',
                 '&:hover': {
                     boxShadow: 3,
                 },
