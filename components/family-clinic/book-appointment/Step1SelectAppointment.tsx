@@ -47,9 +47,7 @@ function isSlotRestricted(
     if (!restrictions) {
         return false;
     }
-    if (restrictions.unavailableDays && restrictions.unavailableDays.includes(appointmentDate)) {
-        return true;
-    }
+
     if (restrictions.dailyUnavailableRanges) {
         for (const range of restrictions.dailyUnavailableRanges) {
             const startTime = parse(range.start, 'HH:mm', dateObj);
@@ -59,20 +57,17 @@ function isSlotRestricted(
             }
         }
     }
-    if (restrictions.restrictedDays) {
-        const restrictedForDate = restrictions.restrictedDays.find(
-            (r) => r.date === appointmentDate,
-        );
-        if (restrictedForDate) {
-            for (const range of restrictedForDate.unavailableRanges) {
-                const startTime = parse(range.start, 'HH:mm', dateObj);
-                const endTime = parse(range.end, 'HH:mm', dateObj);
-                if (slotDate >= startTime && slotDate < endTime) {
-                    return true;
-                }
+
+    if (restrictions.timeOffRanges) {
+        for (const range of restrictions.timeOffRanges) {
+            const timeOffStart = new Date(range.start);
+            const timeOffEnd = new Date(range.end);
+            if (slotDate >= timeOffStart && slotDate < timeOffEnd) {
+                return true;
             }
         }
     }
+
     return false;
 }
 
