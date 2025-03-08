@@ -5,7 +5,7 @@ import { format } from 'date-fns';
 import { Box, Paper, Typography, Skeleton } from '@mui/material';
 import { useScheduledAppointmentsByDate } from '@/hooks/family_clinic/useScheduledAppointmentsByDate';
 import { AppointmentRecordRequest } from '@/types/family_clinic/appointment_records';
-import { CalendarAppointmentCard } from '@/components/family-clinic/admin/AppointmentRecordRequestsCalendarView/CalendarAppointmentCard';
+import { CalendarMonthAppointmentCard } from '@/components/family-clinic/admin/AppointmentRecordRequestsCalendarView/MonthView/CalendarMonthAppointmentCard';
 
 export interface MonthDayCellProps {
     day: Date;
@@ -51,7 +51,7 @@ export const MonthDayCell = ({ day, currentMonth, onSelectAppointment }: MonthDa
                 ) : (
                     appointments.map((appointment) => (
                         <Box key={appointment.request_timestamp} sx={{ mb: 0.5 }}>
-                            <CalendarAppointmentCard
+                            <CalendarMonthAppointmentCard
                                 appointment={appointment}
                                 onClick={() => onSelectAppointment(appointment)}
                             />

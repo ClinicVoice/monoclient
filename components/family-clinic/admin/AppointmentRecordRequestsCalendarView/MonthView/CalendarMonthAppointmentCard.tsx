@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Paper, Box, Typography } from '@mui/material';
-import { addMinutes, format } from 'date-fns';
+import { format } from 'date-fns';
 import { AppointmentRecordRequest } from '@/types/family_clinic/appointment_records';
 
 export interface AppointmentCardProps {
@@ -10,7 +10,7 @@ export interface AppointmentCardProps {
     onClick?: () => void;
 }
 
-export const CalendarAppointmentCard = ({ appointment, onClick }: AppointmentCardProps) => {
+export const CalendarMonthAppointmentCard = ({ appointment, onClick }: AppointmentCardProps) => {
     let displayName: string;
     if (
         !appointment.first_name ||
@@ -33,13 +33,6 @@ export const CalendarAppointmentCard = ({ appointment, onClick }: AppointmentCar
     const startDateTime = new Date(startTimeEpoch * 1000);
     const startTime = format(startDateTime, 'h:mm a');
 
-    let endTime = startTime;
-    if (appointment.duration) {
-        const durationMinutes = parseInt(appointment.duration, 10);
-        const endDateTime = addMinutes(startDateTime, durationMinutes);
-        endTime = format(endDateTime, 'h:mm a');
-    }
-
     const hasNotes = appointment.notes && appointment.notes.trim() !== '';
 
     return (
@@ -47,7 +40,7 @@ export const CalendarAppointmentCard = ({ appointment, onClick }: AppointmentCar
             onClick={onClick}
             elevation={1}
             sx={{
-                p: 0,
+                p: 0.5,
                 border: '1px solid',
                 borderColor: '#64b5f6',
                 backgroundColor: '#e3f2fd',
@@ -55,6 +48,9 @@ export const CalendarAppointmentCard = ({ appointment, onClick }: AppointmentCar
                 borderRadius: 1,
                 cursor: 'pointer',
                 transition: 'box-shadow 0.3s',
+                overflowY: 'hidden',
+                overflowX: 'auto',
+                scrollbarGutter: 'stable',
                 '&:hover': {
                     boxShadow: 3,
                 },
@@ -63,22 +59,23 @@ export const CalendarAppointmentCard = ({ appointment, onClick }: AppointmentCar
             <Box
                 sx={{
                     display: 'flex',
-                    flexDirection: 'column',
-                    textAlign: 'left',
-                    p: 1,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    gap: 1,
+                    whiteSpace: 'nowrap',
                 }}
             >
-                <Typography variant="body2" sx={{ fontWeight: 'bold', color: '#1565c0', mb: 0 }}>
+                <Typography variant="caption" sx={{ color: '#1565c0' }}>
+                    {startTime}
+                </Typography>
+                <Typography variant="caption" sx={{ fontWeight: 'bold', color: '#1565c0' }}>
                     {displayName}
                 </Typography>
-                <Typography variant="caption" sx={{ color: '#1565c0', mb: 0 }}>
+                <Typography variant="caption" sx={{ color: '#1565c0' }}>
                     {title}
                 </Typography>
-                <Typography variant="caption" sx={{ color: '#1565c0', mt: 0 }}>
-                    {startTime} - {endTime}
-                </Typography>
                 {hasNotes && (
-                    <Typography variant="caption" sx={{ color: '#1565c0', mt: 0 }}>
+                    <Typography variant="caption" sx={{ color: '#1565c0' }}>
                         Reason: {appointment.notes}
                     </Typography>
                 )}
