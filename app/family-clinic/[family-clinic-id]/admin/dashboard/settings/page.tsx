@@ -11,24 +11,16 @@ import {
     Alert,
     Chip,
     Paper,
-    Radio,
-    RadioGroup,
-    FormControl,
-    FormControlLabel,
+    IconButton,
 } from '@mui/material';
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { useRouter, useParams } from 'next/navigation';
 import { useFamilyClinicInfo } from '@/hooks/family_clinic/useFamilyClinicInfo';
 import { parseFamilyClinicIdFromUrlParams } from '@/utils/familyClinicUtils';
 import { useToaster } from '@/providers/ToasterProvider';
-import { TimeRange, RestrictedDay } from '@/types/family_clinic/family_clinic';
-
-type UnavailableDayDetail = {
-    date: string;
-    allDay: boolean;
-    customTime?: TimeRange;
-};
+import { TimeRange } from '@/types/family_clinic/family_clinic';
 
 export default function AdminSettings() {
     const params = useParams();
@@ -37,75 +29,46 @@ export default function AdminSettings() {
     const { data: clinic, isLoading, error } = useFamilyClinicInfo(familyClinicId);
     const { setToaster } = useToaster();
 
-    const [restrictions, setRestrictions] = useState<{
-        unavailableDays: UnavailableDayDetail[];
-        dailyUnavailableRanges: TimeRange[];
-        restrictedDays: RestrictedDay[];
-    }>({
-        unavailableDays: [],
-        dailyUnavailableRanges: [],
-        restrictedDays: [],
-    });
+    const [timeOffStart, setTimeOffStart] = useState<Date | null>(null);
+    const [timeOffEnd, setTimeOffEnd] = useState<Date | null>(null);
+    const [timeOffRanges, setTimeOffRanges] = useState<TimeRange[]>([]);
 
-    const [selectedUnavailableDay, setSelectedUnavailableDay] = useState<Date | null>(null);
-    const [unavailableDayType, setUnavailableDayType] = useState<'allDay' | 'custom'>('allDay');
-    const [customUnavailableTime, setCustomUnavailableTime] = useState<TimeRange>({
-        start: '09:00',
-        end: '10:00',
-    });
+    const [dailyUnavailableRanges, setDailyUnavailableRanges] = useState<TimeRange[]>([]);
 
     useEffect(() => {
         if (clinic) {
-            const loadedUnavailableDays = (clinic.restrictions?.unavailableDays || []).map(
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (day: any) => {
-                    if (typeof day === 'string') {
-                        return { date: day, allDay: true };
-                    }
-                    return day;
-                },
-            );
-            setRestrictions({
-                unavailableDays: loadedUnavailableDays,
-                dailyUnavailableRanges: clinic.restrictions?.dailyUnavailableRanges || [],
-                restrictedDays: clinic.restrictions?.restrictedDays || [],
-            });
+            setTimeOffRanges(clinic.restrictions?.timeOffRanges || []);
+            setDailyUnavailableRanges(clinic.restrictions?.dailyUnavailableRanges || []);
         }
     }, [clinic]);
 
+    const handleAddTimeOff = () => {
+        if (timeOffStart && timeOffEnd) {
+            const newRange: TimeRange = {
+                start: timeOffStart.toISOString(),
+                end: timeOffEnd.toISOString(),
+            };
+            setTimeOffRanges((prev) => [...prev, newRange]);
+            setTimeOffStart(null);
+            setTimeOffEnd(null);
+        }
+    };
+
     const handleAddDailyRange = () => {
         const newRange: TimeRange = { start: '13:00', end: '14:00' };
-        setRestrictions((prev) => ({
-            ...prev,
-            dailyUnavailableRanges: [...(prev.dailyUnavailableRanges || []), newRange],
-        }));
+        setDailyUnavailableRanges((prev) => [...prev, newRange]);
     };
 
     const handleDailyRangeChange = (index: number, field: 'start' | 'end', value: string) => {
-        setRestrictions((prev) => {
-            const newRanges = prev.dailyUnavailableRanges ? [...prev.dailyUnavailableRanges] : [];
+        setDailyUnavailableRanges((prev) => {
+            const newRanges = [...prev];
             newRanges[index] = { ...newRanges[index], [field]: value };
-            return { ...prev, dailyUnavailableRanges: newRanges };
+            return newRanges;
         });
     };
 
-    const handleAddUnavailableDay = () => {
-        if (selectedUnavailableDay) {
-            const dateString = selectedUnavailableDay.toISOString().split('T')[0];
-            const newUnavailableDay: UnavailableDayDetail = {
-                date: dateString,
-                allDay: unavailableDayType === 'allDay',
-                customTime: unavailableDayType === 'custom' ? customUnavailableTime : undefined,
-            };
-            setRestrictions((prev) => ({
-                ...prev,
-                unavailableDays: [...prev.unavailableDays, newUnavailableDay],
-            }));
-            // Reset fields after adding
-            setSelectedUnavailableDay(null);
-            setUnavailableDayType('allDay');
-            setCustomUnavailableTime({ start: '09:00', end: '10:00' });
-        }
+    const handleRemoveDailyRange = (index: number) => {
+        setDailyUnavailableRanges((prev) => prev.filter((_, i) => i !== index));
     };
 
     const handleSave = () => {
@@ -126,107 +89,50 @@ export default function AdminSettings() {
             </Typography>
             <Divider sx={{ mb: 4 }} />
 
+            {/* Time Off Section */}
             <Paper sx={{ p: 3, mb: 4 }} elevation={3}>
                 <Typography variant="h5" gutterBottom>
-                    Unavailable Days
+                    Time Off
                 </Typography>
                 <Typography variant="body1" color="textSecondary" sx={{ mb: 2 }}>
-                    Log specific days when you will not be available. Choose &quot;All Day&#34; if
-                    you are unavailable the entire day, or select a specific time range.
+                    Select a start and end date/time range to indicate when you will be off.
                 </Typography>
                 <Grid container spacing={2} alignItems="center">
-                    <Grid item xs={12} md={4}>
+                    <Grid item xs={12} md={6}>
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
-                            <DatePicker
-                                label="Select Day"
-                                value={selectedUnavailableDay}
-                                onChange={(newDate) => setSelectedUnavailableDay(newDate)}
-                                minDate={new Date()}
+                            <DateTimePicker
+                                label="Start Time Off"
+                                value={timeOffStart}
+                                onChange={(newDate) => setTimeOffStart(newDate)}
+                                minDateTime={new Date()}
                             />
                         </LocalizationProvider>
                     </Grid>
-                    <Grid item xs={12} md={4}>
-                        <FormControl component="fieldset">
-                            <RadioGroup
-                                row
-                                value={unavailableDayType}
-                                onChange={(e) =>
-                                    setUnavailableDayType(e.target.value as 'allDay' | 'custom')
-                                }
-                            >
-                                <FormControlLabel
-                                    value="allDay"
-                                    control={<Radio />}
-                                    label="All Day"
-                                />
-                                <FormControlLabel
-                                    value="custom"
-                                    control={<Radio />}
-                                    label="Custom Time"
-                                />
-                            </RadioGroup>
-                        </FormControl>
+                    <Grid item xs={12} md={6}>
+                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                            <DateTimePicker
+                                label="End Time Off"
+                                value={timeOffEnd}
+                                onChange={(newDate) => setTimeOffEnd(newDate)}
+                                minDateTime={timeOffStart || new Date()}
+                            />
+                        </LocalizationProvider>
                     </Grid>
-                    {unavailableDayType === 'custom' && (
-                        <>
-                            <Grid item xs={6} md={2}>
-                                <TextField
-                                    fullWidth
-                                    label="Start Time"
-                                    type="time"
-                                    value={customUnavailableTime.start}
-                                    onChange={(e) =>
-                                        setCustomUnavailableTime((prev) => ({
-                                            ...prev,
-                                            start: e.target.value,
-                                        }))
-                                    }
-                                    InputLabelProps={{ shrink: true }}
-                                />
-                            </Grid>
-                            <Grid item xs={6} md={2}>
-                                <TextField
-                                    fullWidth
-                                    label="End Time"
-                                    type="time"
-                                    value={customUnavailableTime.end}
-                                    onChange={(e) =>
-                                        setCustomUnavailableTime((prev) => ({
-                                            ...prev,
-                                            end: e.target.value,
-                                        }))
-                                    }
-                                    InputLabelProps={{ shrink: true }}
-                                />
-                            </Grid>
-                        </>
-                    )}
                     <Grid item xs={12}>
-                        <Button
-                            variant="contained"
-                            color="secondary"
-                            onClick={handleAddUnavailableDay}
-                        >
-                            Add Unavailable Day
+                        <Button variant="contained" color="secondary" onClick={handleAddTimeOff}>
+                            Add Time Off Range
                         </Button>
                     </Grid>
                 </Grid>
                 <Box sx={{ mt: 3, display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                    {restrictions.unavailableDays.map((day, index) => (
+                    {timeOffRanges.map((range, index) => (
                         <Chip
                             key={index}
-                            label={
-                                day.allDay
-                                    ? `${day.date} (All Day)`
-                                    : `${day.date} (${day.customTime?.start} - ${day.customTime?.end})`
-                            }
+                            label={`From ${new Date(range.start).toLocaleString()} to ${new Date(
+                                range.end,
+                            ).toLocaleString()}`}
                             onDelete={() =>
-                                setRestrictions((prev) => ({
-                                    ...prev,
-                                    unavailableDays: prev.unavailableDays.filter(
-                                        (d) => d.date !== day.date,
-                                    ),
-                                }))
+                                setTimeOffRanges((prev) => prev.filter((_, i) => i !== index))
                             }
                         />
                     ))}
@@ -239,9 +145,9 @@ export default function AdminSettings() {
                 </Typography>
                 <Typography variant="body1" color="textSecondary" sx={{ mb: 2 }}>
                     Log recurring daily time ranges when you will not be available (e.g., lunch
-                    break between 1:00 PM and 2:00 PM).
+                    break).
                 </Typography>
-                {restrictions.dailyUnavailableRanges?.map((range, index) => (
+                {dailyUnavailableRanges.map((range, index) => (
                     <Grid container spacing={2} key={index} alignItems="center" sx={{ mb: 2 }}>
                         <Grid item xs={6} md={4}>
                             <TextField
@@ -266,6 +172,11 @@ export default function AdminSettings() {
                                 }
                                 InputLabelProps={{ shrink: true }}
                             />
+                        </Grid>
+                        <Grid item>
+                            <IconButton onClick={() => handleRemoveDailyRange(index)}>
+                                <DeleteIcon />
+                            </IconButton>
                         </Grid>
                     </Grid>
                 ))}

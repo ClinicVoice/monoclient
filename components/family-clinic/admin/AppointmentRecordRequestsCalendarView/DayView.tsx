@@ -5,7 +5,7 @@ import { format, differenceInMinutes } from 'date-fns';
 import { Box, Typography, Skeleton } from '@mui/material';
 import { useScheduledAppointmentsByDate } from '@/hooks/family_clinic/useScheduledAppointmentsByDate';
 import { AppointmentRecordRequest } from '@/types/family_clinic/appointment_records';
-import { CalendarAppointmentCard } from '@/components/family-clinic/admin/AppointmentRecordRequestsCalendarView/CalendarAppointmentCard';
+import { TimeHeightAppointmentCard } from '@/components/family-clinic/admin/AppointmentRecordRequestsCalendarView/TimeHeightAppointmentCard';
 
 const totalMinutes = 12 * 60; // 720 minutes from 8 AM to 8 PM
 
@@ -105,8 +105,9 @@ export const DayView = ({ date, onSelectAppointment }: DayViewProps) => {
                                     height: durationMinutes,
                                 }}
                             >
-                                <CalendarAppointmentCard
+                                <TimeHeightAppointmentCard
                                     appointment={appointment}
+                                    height={durationMinutes}
                                     onClick={() => onSelectAppointment(appointment)}
                                 />
                             </Box>

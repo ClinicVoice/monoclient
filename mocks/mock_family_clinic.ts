@@ -23,12 +23,15 @@ export const mockFamilyClinic: FamilyClinic = {
     ],
     appointmentTypes: ['Dr. Gordon Yao Appointment', 'Dr. Junyi (Jesse) Li Appointment'],
     restrictions: {
-        unavailableDays: ['2023-12-25', '2024-01-01'],
         dailyUnavailableRanges: [{ start: '12:00', end: '13:00' }],
-        restrictedDays: [
+        timeOffRanges: [
             {
-                date: '2023-11-24',
-                unavailableRanges: [{ start: '14:00', end: '16:00' }],
+                start: new Date('2025-03-15T09:00:00.000Z').toISOString(),
+                end: new Date('2025-03-15T17:00:00.000Z').toISOString(),
+            },
+            {
+                start: new Date('2025-03-20T10:00:00.000Z').toISOString(),
+                end: new Date('2025-03-20T14:00:00.000Z').toISOString(),
             },
         ],
     },
