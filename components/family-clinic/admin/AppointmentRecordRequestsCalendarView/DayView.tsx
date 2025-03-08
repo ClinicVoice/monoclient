@@ -2,16 +2,17 @@
 
 import React from 'react';
 import { format, differenceInMinutes } from 'date-fns';
-import { Box, Paper, Typography, Skeleton } from '@mui/material';
+import { Box, Typography, Skeleton } from '@mui/material';
 import { useScheduledAppointmentsByDate } from '@/hooks/family_clinic/useScheduledAppointmentsByDate';
 import { AppointmentRecordRequest } from '@/types/family_clinic/appointment_records';
+import { CalendarAppointmentCard } from '@/components/family-clinic/admin/AppointmentRecordRequestsCalendarView/CalendarAppointmentCard';
+
+const totalMinutes = 12 * 60; // 720 minutes from 8 AM to 8 PM
 
 export interface DayViewProps {
     date: Date;
     onSelectAppointment: (app: AppointmentRecordRequest) => void;
 }
-
-const totalMinutes = 12 * 60; // 720 minutes from 8 AM to 8 PM
 
 export const DayView = ({ date, onSelectAppointment }: DayViewProps) => {
     const formattedDate = format(date, 'yyyy-MM-dd');
@@ -30,19 +31,24 @@ export const DayView = ({ date, onSelectAppointment }: DayViewProps) => {
                 width: '100%',
             }}
         >
-            {/* Hour Labels */}
-            <Box sx={{ width: 60, borderRight: '1px solid #e0e0e0', position: 'relative' }}>
-                {Array.from({ length: 13 }, (_, i) => i).map((i) => {
+            <Box
+                sx={{
+                    width: 60,
+                    borderRight: '1px solid #e0e0e0',
+                    display: 'grid',
+                    gridTemplateRows: 'repeat(13, 60px)',
+                }}
+            >
+                {Array.from({ length: 12 }, (_, i) => {
                     const hour = 8 + i;
                     return (
                         <Box
                             key={i}
                             sx={{
-                                position: 'absolute',
-                                top: i * 60 - 8,
-                                width: '100%',
-                                textAlign: 'right',
-                                pr: 1,
+                                pt: 0.5,
+                                textAlign: 'left',
+                                pl: 1,
+                                border: '0.5px solid #e0e0e0',
                             }}
                         >
                             <Typography variant="caption">
@@ -57,9 +63,8 @@ export const DayView = ({ date, onSelectAppointment }: DayViewProps) => {
                 })}
             </Box>
 
-            {/* Appointment Grid */}
             <Box sx={{ flex: 1, position: 'relative' }}>
-                {Array.from({ length: 13 }, (_, i) => i).map((i) => (
+                {Array.from({ length: 13 }, (_, i) => (
                     <Box
                         key={i}
                         sx={{
@@ -90,26 +95,21 @@ export const DayView = ({ date, onSelectAppointment }: DayViewProps) => {
                         const minutesFromStart = differenceInMinutes(startTime, dayStart);
                         if (minutesFromStart < 0 || minutesFromStart > totalMinutes) return null;
                         return (
-                            <Paper
+                            <Box
                                 key={appointment.request_timestamp}
-                                onClick={() => onSelectAppointment(appointment)}
                                 sx={{
                                     position: 'absolute',
                                     top: minutesFromStart,
                                     left: 4,
                                     right: 4,
                                     height: durationMinutes,
-                                    bgcolor: 'info.light',
-                                    p: 0.5,
-                                    overflow: 'hidden',
-                                    cursor: 'pointer',
                                 }}
                             >
-                                <Typography variant="caption">
-                                    {format(startTime, 'h:mm a')} - {appointment.first_name}{' '}
-                                    {appointment.last_name}
-                                </Typography>
-                            </Paper>
+                                <CalendarAppointmentCard
+                                    appointment={appointment}
+                                    onClick={() => onSelectAppointment(appointment)}
+                                />
+                            </Box>
                         );
                     })
                 )}

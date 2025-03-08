@@ -1,7 +1,7 @@
 'use client';
 
 import { useParams, useRouter } from 'next/navigation';
-import { Typography, Button, Box } from '@mui/material';
+import { Typography, Button, Box, Divider } from '@mui/material';
 import LogoutButton from '@/components/buttons/LogoutButton';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { DashboardContainer } from '@/app/family-clinic/[family-clinic-id]/admin/dashboard/styles';
@@ -51,7 +51,7 @@ export default function AdminDashboard() {
                         {clinic.name}
                     </Typography>
                     <Typography variant="h3" gutterBottom>
-                        Admin Dashboard
+                        Admin Portal
                     </Typography>
                 </Box>
                 <Box
@@ -77,7 +77,25 @@ export default function AdminDashboard() {
                 </Box>
             </Box>
 
+            <Box sx={{ mb: 2 }}>
+                <Divider
+                    sx={{
+                        borderWidth: '10',
+                        width: '95vw',
+                    }}
+                />
+            </Box>
+
             <AppointmentRecordRequestsCalendarView />
+
+            <Box sx={{ mb: 4 }}>
+                <Divider
+                    sx={{
+                        borderWidth: '10',
+                        width: '90vw',
+                    }}
+                />
+            </Box>
 
             <RecentTestResultsRequestsTable />
         </DashboardContainer>

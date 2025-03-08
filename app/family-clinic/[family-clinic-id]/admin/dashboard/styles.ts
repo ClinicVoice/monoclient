@@ -7,6 +7,7 @@ export const DashboardContainer = styled(Container)(({ theme }) => ({
     alignItems: 'center',
     textAlign: 'center',
     paddingTop: theme.spacing(6),
+    maxWidth: '100vw !important',
 }));
 
 export const ButtonContainer = styled('div')(({ theme }) => ({

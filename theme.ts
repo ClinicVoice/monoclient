@@ -16,7 +16,7 @@ const theme = createTheme({
             contrastText: '#ffffff',
         },
         background: {
-            default: '#f5f7fb',
+            default: '#ffffff',
             paper: '#ffffff',
         },
         text: {
@@ -27,20 +27,30 @@ const theme = createTheme({
     },
     typography: {
         h1: {
-            fontFamily: 'var(--font-space-grotesk), sans-serif',
+            fontFamily: 'var(--font-manrope), sans-serif',
             fontWeight: 700,
             fontSize: '2rem',
             lineHeight: 1.2,
         },
         h2: {
-            fontFamily: 'var(--font-space-grotesk), sans-serif',
+            fontFamily: 'var(--font-manrope), sans-serif',
             fontWeight: 600,
             fontSize: '1.75rem',
         },
         h3: {
-            fontFamily: 'var(--font-space-grotesk), sans-serif',
+            fontFamily: 'var(--font-manrope), sans-serif',
             fontWeight: 500,
             fontSize: '1.5rem',
+        },
+        h4: {
+            fontFamily: 'var(--font-manrope), sans-serif',
+            fontWeight: 400,
+            fontSize: '1.4rem',
+        },
+        h5: {
+            fontFamily: 'var(--font-manrope), sans-serif',
+            fontWeight: 400,
+            fontSize: '1.3rem',
         },
         body1: {
             fontFamily: 'var(--font-manrope), sans-serif',

@@ -14,8 +14,8 @@ import {
     SetAppointmentField,
 } from '@/types/family_clinic/appointment_records';
 import { StepCard } from '@/app/family-clinic/[family-clinic-id]/book-appointment/styles';
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
+import { MuiTelInput } from 'mui-tel-input';
+import { CalendarDatePicker } from '@/components/datepicker/CalendarDatePicker';
 
 interface Step2Props {
     appointment: CreateAppointmentForm;
@@ -116,36 +116,33 @@ const Step2EnterContactInfo = ({
                             <MenuItem value="Other">Other</MenuItem>
                         </Select>
                     </FormControl>
-                    <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <DatePicker
-                            label="Birthday"
-                            value={appointment.birthday ? new Date(appointment.birthday) : null}
-                            onChange={(newDate) => {
-                                if (newDate) {
-                                    updateAppointmentField(
-                                        'birthday',
-                                        newDate.toISOString().split('T')[0],
-                                    );
-                                }
-                            }}
-                            sx={{
-                                width: '100%',
-                                marginTop: '0.5rem',
-                            }}
-                            minDate={new Date(1900, 0, 1)}
-                            maxDate={new Date()}
-                        />
-                    </LocalizationProvider>
+                    <CalendarDatePicker
+                        label="Birthday"
+                        value={appointment.birthday ? new Date(appointment.birthday) : null}
+                        onChange={(newDate) => {
+                            if (newDate) {
+                                updateAppointmentField(
+                                    'birthday',
+                                    newDate.toISOString().split('T')[0],
+                                );
+                            }
+                        }}
+                        sx={{
+                            width: '100%',
+                            marginTop: '0.5rem',
+                        }}
+                        minDate={new Date(1900, 0, 1)}
+                        maxDate={new Date()}
+                    />
                 </>
             )}
 
-            <TextField
+            <MuiTelInput
                 fullWidth
                 margin="normal"
                 label="Phone Number"
-                type="tel"
                 value={appointment.contact}
-                onChange={(e) => updateAppointmentField('contact', e.target.value)}
+                onChange={(newValue) => updateAppointmentField('contact', newValue)}
                 error={!!errors.contact}
                 helperText={errors.contact}
             />

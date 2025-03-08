@@ -11,13 +11,11 @@ import {
     Alert,
 } from '@mui/material';
 import { StepCard } from '@/app/family-clinic/[family-clinic-id]/book-appointment/styles';
-import { useRouter, useParams } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { useAvailableAppointmentSlots } from '@/hooks/family_clinic/useAvailableAppointmentSlots';
 import { extractStartTimes } from '@/utils/dateTimeUtils';
 import { useFamilyClinicInfo } from '@/hooks/family_clinic/useFamilyClinicInfo';
 import { parseFamilyClinicIdFromUrlParams } from '@/utils/familyClinicUtils';
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import {
     CreateAppointmentForm,
     SetAppointmentField,
@@ -27,12 +25,14 @@ import {
     FamilyClinicRestrictions,
 } from '@/types/family_clinic/family_clinic';
 import { parse } from 'date-fns';
+import { CalendarDatePicker } from '@/components/datepicker/CalendarDatePicker';
 
 interface Step1Props {
     appointment: CreateAppointmentForm;
     updateAppointmentField: SetAppointmentField;
     errors: { [key: string]: string };
     handleNext: () => void;
+    onExit: () => void;
 }
 
 // TODO: move logic to backend
@@ -76,19 +76,19 @@ function isSlotRestricted(
     return false;
 }
 
+const MAX_DAYS_AHEAD = 45;
+
 const Step1SelectAppointment = ({
     appointment,
     updateAppointmentField,
     errors,
     handleNext,
+    onExit,
 }: Step1Props) => {
-    const router = useRouter();
     const params = useParams();
     const familyClinicId = parseFamilyClinicIdFromUrlParams(params);
 
     const [selectedTime, setSelectedTime] = useState('');
-    const [appointmentDuration, setAppointmentDuration] = useState(30);
-
     const {
         data: clinic,
         isLoading: clinicLoading,
@@ -96,7 +96,7 @@ const Step1SelectAppointment = ({
     } = useFamilyClinicInfo(familyClinicId);
     const { data, isLoading: slotsLoading } = useAvailableAppointmentSlots(
         appointment.date,
-        appointmentDuration,
+        appointment.duration,
     );
 
     const availableSlots = data?.available_times || [];
@@ -137,7 +137,10 @@ const Step1SelectAppointment = ({
                     onChange={(e) => {
                         const selectedProviderName = e.target.value;
                         updateAppointmentField('provider', selectedProviderName);
-                        setAppointmentDuration(providerDurationMap[selectedProviderName] || 30);
+                        updateAppointmentField(
+                            'duration',
+                            providerDurationMap[selectedProviderName] || 30,
+                        );
                     }}
                 >
                     {clinic.providers.map((provider, index) => (
@@ -182,26 +185,18 @@ const Step1SelectAppointment = ({
             )}
 
             {appointment.provider && appointment.appointment_type && (
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    <DatePicker
-                        label="Date"
-                        value={appointment.date ? new Date(appointment.date) : null}
-                        onChange={(newDate) => {
-                            if (newDate) {
-                                updateAppointmentField('date', newDate.toISOString().split('T')[0]);
-                            }
-                        }}
-                        minDate={new Date()}
-                        maxDate={
-                            new Date(
-                                new Date().getFullYear() + 50,
-                                new Date().getMonth(),
-                                new Date().getDate(),
-                            )
+                <CalendarDatePicker
+                    label="Date"
+                    value={appointment.date ? new Date(appointment.date) : null}
+                    onChange={(newDate) => {
+                        if (newDate) {
+                            updateAppointmentField('date', newDate.toISOString().split('T')[0]);
                         }
-                        sx={{ width: '100%', marginTop: '0.5rem' }}
-                    />
-                </LocalizationProvider>
+                    }}
+                    minDate={new Date()}
+                    maxDate={new Date(new Date().getTime() + MAX_DAYS_AHEAD * 24 * 60 * 60 * 1000)}
+                    sx={{ width: '100%', marginTop: '0.5rem' }}
+                />
             )}
 
             {appointment.date && (
@@ -237,11 +232,7 @@ const Step1SelectAppointment = ({
 
             <Grid container spacing={2} mt={2} justifyContent="center">
                 <Grid item>
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={() => router.push(`/family-clinic/${familyClinicId}`)}
-                    >
+                    <Button variant="contained" color="secondary" onClick={onExit}>
                         Back
                     </Button>
                 </Grid>
