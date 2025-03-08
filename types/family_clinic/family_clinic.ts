@@ -3,15 +3,9 @@ export interface TimeRange {
     end: string;
 }
 
-export interface RestrictedDay {
-    date: string;
-    unavailableRanges: TimeRange[];
-}
-
 export interface FamilyClinicRestrictions {
-    unavailableDays?: string[];
     dailyUnavailableRanges?: TimeRange[];
-    restrictedDays?: RestrictedDay[];
+    timeOffRanges?: TimeRange[];
 }
 
 export interface FamilyClinicProvider {

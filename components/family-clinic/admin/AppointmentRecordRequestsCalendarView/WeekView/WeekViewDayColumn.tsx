@@ -5,7 +5,7 @@ import { Box, Skeleton, Typography } from '@mui/material';
 import { format, differenceInMinutes } from 'date-fns';
 import { useScheduledAppointmentsByDate } from '@/hooks/family_clinic/useScheduledAppointmentsByDate';
 import { AppointmentRecordRequest } from '@/types/family_clinic/appointment_records';
-import { CalendarAppointmentCard } from '@/components/family-clinic/admin/AppointmentRecordRequestsCalendarView/CalendarAppointmentCard';
+import { TimeHeightAppointmentCard } from '@/components/family-clinic/admin/AppointmentRecordRequestsCalendarView/TimeHeightAppointmentCard';
 
 export interface WeekViewDayColumnProps {
     day: Date;
@@ -64,8 +64,9 @@ export const WeekViewDayColumn = ({
                                 height: durationMinutes,
                             }}
                         >
-                            <CalendarAppointmentCard
+                            <TimeHeightAppointmentCard
                                 appointment={appointment}
+                                height={durationMinutes}
                                 onClick={() => onSelectAppointment(appointment)}
                             />
                         </Box>
