@@ -1,9 +1,11 @@
+'use client';
+
 import React from 'react';
 import { Paper, Box, Typography } from '@mui/material';
 import { addMinutes, format } from 'date-fns';
 import { AppointmentRecordRequest } from '@/types/family_clinic/appointment_records';
 
-interface AppointmentCardProps {
+export interface AppointmentCardProps {
     appointment: AppointmentRecordRequest;
     onClick?: () => void;
 }

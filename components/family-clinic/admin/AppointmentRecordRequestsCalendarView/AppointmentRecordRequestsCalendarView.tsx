@@ -7,7 +7,7 @@ import { exportAppointmentRecordRequestsToCSV } from '@/utils/exportUtils';
 import { getScheduledAppointmentsByDate } from '@/services/familyClinicService';
 import { AppointmentRecordRequest } from '@/types/family_clinic/appointment_records';
 import { MonthView } from '@/components/family-clinic/admin/AppointmentRecordRequestsCalendarView/MonthView/MonthView';
-import { WeekView } from '@/components/family-clinic/admin/AppointmentRecordRequestsCalendarView/WeekView';
+import { WeekView } from '@/components/family-clinic/admin/AppointmentRecordRequestsCalendarView/WeekView/WeekView';
 import { DayView } from '@/components/family-clinic/admin/AppointmentRecordRequestsCalendarView/DayView';
 import { AppointmentRecordRequestDetailsPanel } from '@/components/family-clinic/admin/AppointmentRecordRequestsCalendarView/AppointmentRecordRequestDetailsPanel';
 import { BookAppointmentDialog } from '@/components/family-clinic/book-appointment/BookAppointmentDialog';
