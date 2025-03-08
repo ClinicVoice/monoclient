@@ -19,6 +19,7 @@ export const TimeHeightAppointmentCard = ({
     const startTime = new Date(parseInt(appointment.appointment_time_epoch) * 1000);
     const durationMinutes = parseInt(appointment.duration);
     const endTime = addMinutes(startTime, durationMinutes);
+    const renderedHeight = Math.max(height, 20);
 
     let displayName: string;
     if (
@@ -53,7 +54,7 @@ export const TimeHeightAppointmentCard = ({
                 borderRadius: 1,
                 cursor: 'pointer',
                 transition: 'box-shadow 0.3s',
-                height,
+                height: renderedHeight,
                 overflowY: 'hidden',
                 overflowX: 'hidden',
                 '&:hover': {
