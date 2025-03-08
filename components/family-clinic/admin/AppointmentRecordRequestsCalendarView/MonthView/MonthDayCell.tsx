@@ -39,7 +39,7 @@ export const MonthDayCell = ({ day, currentMonth, onSelectAppointment }: MonthDa
             </Box>
             <Box sx={{ mt: 2 }}>
                 {isLoading ? (
-                    <Skeleton variant="rectangular" width="100%" height="30%" />
+                    <Skeleton variant="rectangular" width="100%" height={50} />
                 ) : error ? (
                     <Typography variant="caption" color="error">
                         Error
