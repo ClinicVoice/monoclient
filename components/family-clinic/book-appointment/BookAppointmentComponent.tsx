@@ -23,7 +23,11 @@ import { isValidEmail } from '@/utils/inputValidationUtils';
 
 const steps = ['Select Appointment', 'Enter Contact Info'];
 
-export default function BookAppointmentComponent() {
+interface BookAppointmentComponentProps {
+    onExit: () => void;
+}
+
+export default function BookAppointmentComponent({ onExit }: BookAppointmentComponentProps) {
     const params = useParams();
     const familyClinicId = parseFamilyClinicIdFromUrlParams(params);
     const { setToaster } = useToaster();
@@ -145,7 +149,7 @@ export default function BookAppointmentComponent() {
             {
                 onSuccess: () => {
                     setToaster('Appointment successfully booked!', 'success');
-                    router.push(`/family-clinic/${familyClinicId}`);
+                    onExit();
                 },
                 onError: () => {
                     setToaster('Failed to book appointment. Please try again.', 'error');
@@ -188,6 +192,7 @@ export default function BookAppointmentComponent() {
                     updateAppointmentField={updateAppointmentField}
                     errors={errors}
                     handleNext={handleNext}
+                    onExit={onExit}
                 />
             ) : (
                 <Step2EnterContactInfo

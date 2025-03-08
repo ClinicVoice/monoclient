@@ -32,6 +32,7 @@ interface Step1Props {
     updateAppointmentField: SetAppointmentField;
     errors: { [key: string]: string };
     handleNext: () => void;
+    onExit: () => void;
 }
 
 // TODO: move logic to backend
@@ -82,6 +83,7 @@ const Step1SelectAppointment = ({
     updateAppointmentField,
     errors,
     handleNext,
+    onExit,
 }: Step1Props) => {
     const router = useRouter();
     const params = useParams();
@@ -231,11 +233,7 @@ const Step1SelectAppointment = ({
 
             <Grid container spacing={2} mt={2} justifyContent="center">
                 <Grid item>
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={() => router.push(`/family-clinic/${familyClinicId}`)}
-                    >
+                    <Button variant="contained" color="secondary" onClick={onExit}>
                         Back
                     </Button>
                 </Grid>

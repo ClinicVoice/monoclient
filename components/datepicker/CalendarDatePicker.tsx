@@ -10,14 +10,19 @@ export function CalendarDatePicker<TDate extends Date = Date>(props: DatePickerP
         <LocalizationProvider dateAdapter={AdapterDateFns}>
             <DatePicker
                 {...props}
-                open={isOpen}
-                onOpen={() => setIsOpen(true)}
-                onClose={() => setIsOpen(false)}
+                open={props.open || isOpen}
+                onOpen={() => {
+                    setIsOpen(true);
+                    if (props.onOpen) props.onOpen();
+                }}
+                onClose={() => {
+                    setIsOpen(false);
+                    if (props.onClose) props.onClose();
+                }}
                 slotProps={{
+                    ...props.slotProps,
                     textField: {
-                        inputProps: {
-                            readOnly: true,
-                        },
+                        ...props.slotProps?.textField,
                         onClick: () => setIsOpen(true),
                     },
                 }}
