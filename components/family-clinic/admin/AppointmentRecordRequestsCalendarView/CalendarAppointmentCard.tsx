@@ -40,6 +40,8 @@ export const CalendarAppointmentCard = ({ appointment, onClick }: AppointmentCar
         endTime = format(endDateTime, 'h:mm a');
     }
 
+    const hasNotes = appointment.notes && appointment.notes.trim() !== '';
+
     return (
         <Paper
             onClick={onClick}
@@ -75,6 +77,11 @@ export const CalendarAppointmentCard = ({ appointment, onClick }: AppointmentCar
                 <Typography variant="caption" sx={{ color: '#1565c0', mt: 0 }}>
                     {startTime} - {endTime}
                 </Typography>
+                {hasNotes && (
+                    <Typography variant="caption" sx={{ color: '#1565c0', mt: 0 }}>
+                        Reason: {appointment.notes}
+                    </Typography>
+                )}
             </Box>
         </Paper>
     );

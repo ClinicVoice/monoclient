@@ -19,12 +19,33 @@ export const TimeHeightAppointmentCard = ({
     const startTime = new Date(parseInt(appointment.appointment_time_epoch) * 1000);
     const durationMinutes = parseInt(appointment.duration);
     const endTime = addMinutes(startTime, durationMinutes);
+
+    let displayName: string;
+    if (
+        !appointment.first_name ||
+        !appointment.last_name ||
+        (appointment.first_name.trim() === '' && appointment.last_name.trim() === '')
+    ) {
+        displayName = 'Name N/A';
+    } else {
+        const firstName = appointment.first_name.trim();
+        const lastName = appointment.last_name.trim();
+        displayName = `${lastName}, ${firstName}`;
+    }
+
+    const title =
+        appointment.appointment_type && appointment.appointment_type.trim() !== ''
+            ? appointment.appointment_type
+            : 'General Checkup';
+
+    const hasNotes = appointment.notes && appointment.notes.trim() !== '';
+
     return (
         <Paper
             onClick={onClick}
             elevation={1}
             sx={{
-                p: 0,
+                pl: 0.5,
                 border: '1px solid',
                 borderColor: '#64b5f6',
                 backgroundColor: '#e3f2fd',
@@ -33,7 +54,7 @@ export const TimeHeightAppointmentCard = ({
                 cursor: 'pointer',
                 transition: 'box-shadow 0.3s',
                 height,
-                overflow: 'hidden',
+                overflowX: 'auto',
                 '&:hover': {
                     boxShadow: 3,
                 },
@@ -42,15 +63,26 @@ export const TimeHeightAppointmentCard = ({
             <Box
                 sx={{
                     display: 'flex',
-                    flexDirection: 'column',
-                    textAlign: 'left',
-                    paddingLeft: '0.2rem',
-                    height: '100%',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    gap: 2,
+                    whiteSpace: 'nowrap',
                 }}
             >
+                <Typography variant="caption" sx={{ fontWeight: 'bold', color: '#1565c0' }}>
+                    {displayName}
+                </Typography>
+                <Typography variant="caption" sx={{ color: '#1565c0' }}>
+                    {title}
+                </Typography>
                 <Typography variant="caption" sx={{ color: '#1565c0' }}>
                     {format(startTime, 'hh:mm a')} - {format(endTime, 'hh:mm a')}
                 </Typography>
+                {hasNotes && (
+                    <Typography variant="caption" sx={{ color: '#1565c0' }}>
+                        Reason: {appointment.notes}
+                    </Typography>
+                )}
             </Box>
         </Paper>
     );
