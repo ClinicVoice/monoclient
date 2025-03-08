@@ -11,7 +11,7 @@ import {
     Alert,
 } from '@mui/material';
 import { StepCard } from '@/app/family-clinic/[family-clinic-id]/book-appointment/styles';
-import { useRouter, useParams } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { useAvailableAppointmentSlots } from '@/hooks/family_clinic/useAvailableAppointmentSlots';
 import { extractStartTimes } from '@/utils/dateTimeUtils';
 import { useFamilyClinicInfo } from '@/hooks/family_clinic/useFamilyClinicInfo';
@@ -85,7 +85,6 @@ const Step1SelectAppointment = ({
     handleNext,
     onExit,
 }: Step1Props) => {
-    const router = useRouter();
     const params = useParams();
     const familyClinicId = parseFamilyClinicIdFromUrlParams(params);
 

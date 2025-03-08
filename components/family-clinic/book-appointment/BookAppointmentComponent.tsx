@@ -2,7 +2,7 @@
 
 import { Typography, Stepper, Step, StepLabel } from '@mui/material';
 import { useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { FormContainer } from '@/app/family-clinic/[family-clinic-id]/book-appointment/styles';
 import { useCreateAppointment } from '@/hooks/family_clinic/useCreateAppointment';
 import Step1SelectAppointment from '@/components/family-clinic/book-appointment/Step1SelectAppointment';
@@ -52,8 +52,6 @@ export default function BookAppointmentComponent({ onExit }: BookAppointmentComp
         pharmacy: '',
         duration: 30,
     });
-
-    const router = useRouter();
 
     const { data: clinic, isLoading, error } = useFamilyClinicInfo(familyClinicId);
     const { mutate: createAppointment, isPending } = useCreateAppointment();

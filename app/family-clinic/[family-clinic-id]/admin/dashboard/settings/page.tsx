@@ -22,11 +22,7 @@ import { useRouter, useParams } from 'next/navigation';
 import { useFamilyClinicInfo } from '@/hooks/family_clinic/useFamilyClinicInfo';
 import { parseFamilyClinicIdFromUrlParams } from '@/utils/familyClinicUtils';
 import { useToaster } from '@/providers/ToasterProvider';
-import {
-    FamilyClinicRestrictions,
-    TimeRange,
-    RestrictedDay,
-} from '@/types/family_clinic/family_clinic';
+import { TimeRange, RestrictedDay } from '@/types/family_clinic/family_clinic';
 
 type UnavailableDayDetail = {
     date: string;
@@ -61,6 +57,7 @@ export default function AdminSettings() {
     useEffect(() => {
         if (clinic) {
             const loadedUnavailableDays = (clinic.restrictions?.unavailableDays || []).map(
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 (day: any) => {
                     if (typeof day === 'string') {
                         return { date: day, allDay: true };
@@ -236,7 +233,6 @@ export default function AdminSettings() {
                 </Box>
             </Paper>
 
-            {/* Time Block Breaks Section */}
             <Paper sx={{ p: 3, mb: 4 }} elevation={3}>
                 <Typography variant="h5" gutterBottom>
                     Time Block Breaks
