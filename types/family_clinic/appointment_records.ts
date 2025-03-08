@@ -14,6 +14,7 @@ export interface CreateAppointmentForm {
     birthday: string;
     sex: string;
     pharmacy: string;
+    duration: number;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -33,6 +34,7 @@ export interface CreateAppointmentRequest {
     sex: string;
     pharmacy: string;
     notes: string;
+    duration: number;
 }
 
 export interface CreateAppointmentResponse {
