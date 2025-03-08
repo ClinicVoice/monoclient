@@ -12,8 +12,6 @@ import {
 } from '@mui/material';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { exportAppointmentRecordRequestsToCSV } from '@/utils/exportUtils';
 import { getScheduledAppointmentsByDate } from '@/services/familyClinicService';
 import { AppointmentRecordRequest } from '@/types/family_clinic/appointment_records';
@@ -22,6 +20,7 @@ import { WeekView } from '@/components/family-clinic/admin/AppointmentRecordRequ
 import { DayView } from '@/components/family-clinic/admin/AppointmentRecordRequestsCalendarView/DayView';
 import { AppointmentRecordRequestDetailsPanel } from '@/components/family-clinic/admin/AppointmentRecordRequestsCalendarView/AppointmentRecordRequestDetailsPanel';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import { CalendarDatePicker } from '@/components/datepicker/CalendarDatePicker';
 
 export const AppointmentRecordRequestsCalendarView: React.FC = () => {
     const [currentView, setCurrentView] = useState<'day' | 'week' | 'month'>('month');
@@ -132,17 +131,15 @@ export const AppointmentRecordRequestsCalendarView: React.FC = () => {
                 >
                     Export CSV
                 </Button>
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    <DatePicker
-                        label="Select Date"
-                        value={currentDate}
-                        onChange={(newDate) => {
-                            if (newDate) {
-                                setCurrentDate(newDate);
-                            }
-                        }}
-                    />
-                </LocalizationProvider>
+                <CalendarDatePicker
+                    label="Select Date"
+                    value={currentDate}
+                    onChange={(newDate) => {
+                        if (newDate) {
+                            setCurrentDate(newDate);
+                        }
+                    }}
+                />
                 <ToggleButtonGroup
                     value={currentView}
                     exclusive

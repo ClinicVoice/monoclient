@@ -103,7 +103,7 @@ h1,
 h2,
 h3,
 h4 {
-    font-family: var(--font-space-grotesk), sans-serif;
+    font-family: var(--font-manrope), sans-serif;
 }
 
 /* Set default font to Manrope for the rest */

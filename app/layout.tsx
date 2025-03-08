@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import { Manrope } from 'next/font/google';
-import { Space_Grotesk } from 'next/font/google';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
 import { ThemeProvider } from '@mui/material/styles';
 
@@ -11,12 +10,6 @@ import { AuthProvider } from '@/providers/AuthProvider';
 import { ToasterProvider } from '@/providers/ToasterProvider';
 import theme from '@/theme';
 import Navbar from '@/components/navbar/Navbar';
-
-const spaceGrotesk = Space_Grotesk({
-    subsets: ['latin'],
-    variable: '--font-space-grotesk',
-    weight: ['400', '500', '700'],
-});
 
 const manrope = Manrope({
     subsets: ['latin'],
@@ -36,7 +29,7 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body className={`${manrope.variable} ${spaceGrotesk.variable}`}>
+            <body className={`${manrope.variable}`}>
                 <ReactQueryProvider>
                     <AppRouterCacheProvider>
                         <ToasterProvider>
