@@ -5,7 +5,7 @@ import {
     GetAppointmentRecordRequestsResponse,
     GetAvailableAppointmentSlotsResponse,
 } from '@/types/family_clinic/appointment_records';
-import { FamilyClinic } from '@/types/family_clinic/family_clinic';
+import { FamilyClinicConfig } from '@/types/family_clinic/family_clinic';
 import { mockFamilyClinic } from '@/mocks/mock_family_clinic';
 import { GetRecentTestResultsRequestsResponse } from '@/types/family_clinic/test_results_requests';
 
@@ -69,7 +69,7 @@ export const getRecentScheduledAppointments = async (
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const getFamilyClinicInfo = async (familyClinicId: string): Promise<FamilyClinic> => {
+export const getFamilyClinicInfo = async (familyClinicId: string): Promise<FamilyClinicConfig> => {
     return new Promise((resolve) => {
         setTimeout(() => resolve(mockFamilyClinic), 500);
     });

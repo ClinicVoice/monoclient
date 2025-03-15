@@ -3,29 +3,31 @@ export interface TimeRange {
     end: string;
 }
 
-export interface FamilyClinicRestrictions {
-    dailyUnavailableRanges?: TimeRange[];
-    timeOffRanges?: TimeRange[];
+export interface FamilyClinicProviderRestrictions {
+    daily_unavailable_ranges?: TimeRange[];
+    time_off_ranges?: TimeRange[];
 }
 
 export interface FamilyClinicProvider {
+    provider_id: string;
     name: string;
-    appointmentDuration: number;
+    appointment_duration: number;
+    restrictions?: FamilyClinicProviderRestrictions;
 }
 
 export interface FamilyClinicOpeningHours {
     [day: string]: { open: string; close: string } | null;
 }
 
-export interface FamilyClinic {
-    familyClinicId: string;
+export interface FamilyClinicConfig {
+    family_clinic_id: string;
     name: string;
-    doctorName: string;
+    doctor_name: string;
     address: string;
     phone: string;
     email: string;
-    openingHours: FamilyClinicOpeningHours;
+    opening_hours: FamilyClinicOpeningHours;
     providers: FamilyClinicProvider[];
-    appointmentTypes: string[];
-    restrictions?: FamilyClinicRestrictions;
+    appointment_types: string[];
+    restrictions?: FamilyClinicProviderRestrictions;
 }

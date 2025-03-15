@@ -31,7 +31,7 @@ export default function FamilyClinicHomePage() {
                     {clinic.name}
                 </Typography>
                 <Typography variant="h3" gutterBottom>
-                    {clinic.doctorName}
+                    {clinic.doctor_name}
                 </Typography>
                 <Divider />
                 <Box marginY={2}>
@@ -44,7 +44,7 @@ export default function FamilyClinicHomePage() {
                     <Typography variant="body1">
                         <strong>Email:</strong> {clinic.email}
                     </Typography>
-                    <FamilyClinicOpeningHoursDisplay openingHours={clinic.openingHours} />
+                    <FamilyClinicOpeningHoursDisplay openingHours={clinic.opening_hours} />
                 </Box>
 
                 <Divider />

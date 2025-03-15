@@ -14,9 +14,9 @@ export const useRecentTestResultsRequests = (limit: number = 5) => {
 
     return useQuery<GetRecentTestResultsRequestsResponse>({
         queryKey: ['recentTestResultsRequests', limit],
-        queryFn: async () => {
+        queryFn: () => {
             try {
-                return await getRecentTestResultsRequests(limit);
+                return getRecentTestResultsRequests(limit);
             } catch (error) {
                 if (error instanceof AxiosError && error.response?.status === 401) {
                     clearAuth();

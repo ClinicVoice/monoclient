@@ -37,8 +37,8 @@ export default function AdminSettings() {
 
     useEffect(() => {
         if (clinic) {
-            setTimeOffRanges(clinic.restrictions?.timeOffRanges || []);
-            setDailyUnavailableRanges(clinic.restrictions?.dailyUnavailableRanges || []);
+            setTimeOffRanges(clinic.restrictions?.time_off_ranges || []);
+            setDailyUnavailableRanges(clinic.restrictions?.daily_unavailable_ranges || []);
         }
     }, [clinic]);
 

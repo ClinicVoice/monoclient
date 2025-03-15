@@ -14,9 +14,9 @@ export const useScheduledAppointmentsByDate = (date: string) => {
 
     return useQuery<GetAppointmentRecordRequestsResponse>({
         queryKey: ['scheduledAppointments', date],
-        queryFn: async () => {
+        queryFn: () => {
             try {
-                return await getScheduledAppointmentsByDate(date);
+                return getScheduledAppointmentsByDate(date);
             } catch (error) {
                 if (error instanceof AxiosError && error.response?.status === 401) {
                     clearAuth();

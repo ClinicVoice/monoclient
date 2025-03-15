@@ -14,9 +14,9 @@ export const useRecentScheduledAppointments = (limit: number = 5) => {
 
     return useQuery<GetAppointmentRecordRequestsResponse>({
         queryKey: ['recentAppointments', limit],
-        queryFn: async () => {
+        queryFn: () => {
             try {
-                return await getRecentScheduledAppointments(limit);
+                return getRecentScheduledAppointments(limit);
             } catch (error) {
                 if (error instanceof AxiosError && error.response?.status === 401) {
                     clearAuth();
