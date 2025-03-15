@@ -48,8 +48,8 @@ function isSlotRestricted(
         return false;
     }
 
-    if (restrictions.dailyUnavailableRanges) {
-        for (const range of restrictions.dailyUnavailableRanges) {
+    if (restrictions.daily_unavailable_ranges) {
+        for (const range of restrictions.daily_unavailable_ranges) {
             const startTime = parse(range.start, 'HH:mm', dateObj);
             const endTime = parse(range.end, 'HH:mm', dateObj);
             if (slotDate >= startTime && slotDate < endTime) {
@@ -58,8 +58,8 @@ function isSlotRestricted(
         }
     }
 
-    if (restrictions.timeOffRanges) {
-        for (const range of restrictions.timeOffRanges) {
+    if (restrictions.time_off_ranges) {
+        for (const range of restrictions.time_off_ranges) {
             const timeOffStart = new Date(range.start);
             const timeOffEnd = new Date(range.end);
             if (slotDate >= timeOffStart && slotDate < timeOffEnd) {
@@ -103,7 +103,7 @@ const Step1SelectAppointment = ({
 
     const providerDurationMap =
         clinic?.providers.reduce<Record<string, number>>((acc, provider: FamilyClinicProvider) => {
-            acc[provider.name] = provider.appointmentDuration;
+            acc[provider.name] = provider.appointment_duration;
             return acc;
         }, {}) || {};
 
@@ -158,7 +158,7 @@ const Step1SelectAppointment = ({
                                 updateAppointmentField('appointment_type', e.target.value)
                             }
                         >
-                            {clinic.appointmentTypes.map((type: string, index: number) => (
+                            {clinic.appointment_types.map((type: string, index: number) => (
                                 <MenuItem key={index} value={type}>
                                     {type}
                                 </MenuItem>

@@ -3,7 +3,7 @@ export interface TimeRange {
     end: string;
 }
 
-export interface FamilyClinicProviderRestrictions {
+export interface FamilyClinicRestrictions {
     daily_unavailable_ranges?: TimeRange[];
     time_off_ranges?: TimeRange[];
 }
@@ -12,7 +12,7 @@ export interface FamilyClinicProvider {
     provider_id: string;
     name: string;
     appointment_duration: number;
-    restrictions?: FamilyClinicProviderRestrictions;
+    restrictions?: FamilyClinicRestrictions;
 }
 
 export interface FamilyClinicOpeningHours {
@@ -29,5 +29,5 @@ export interface FamilyClinicConfig {
     opening_hours: FamilyClinicOpeningHours;
     providers: FamilyClinicProvider[];
     appointment_types: string[];
-    restrictions?: FamilyClinicProviderRestrictions;
+    restrictions?: FamilyClinicRestrictions;
 }
