@@ -32,11 +32,15 @@ export default function AdminLogin() {
         formState: { errors },
     } = useForm<LoginRequest>();
 
-    const onSubmit = async (data: LoginRequest) => {
+    const onSubmit = (data: LoginRequest) => {
         loginMutation.mutate(data, {
             onSuccess: () => {
                 setToaster('Login successful!', 'success');
-                router.push(`/family-clinic/${familyClinicId}/admin/dashboard`);
+                // TLDR: fix to prevent rapid inputs + server call + router push causeing browser tab crash
+                // spent too long on this to think of another solution tbh
+                setTimeout(() => {
+                    router.push(`/family-clinic/${familyClinicId}/admin/dashboard`);
+                }, 0);
             },
             onError: () => {
                 setToaster('Invalid credentials. Please try again.', 'error');
