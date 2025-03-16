@@ -10,8 +10,8 @@ export default function RecentAppointmentRequestsTable() {
     const { data, isLoading } = useRecentScheduledAppointments(limit);
     const appointments = data?.scheduled_appointments || [];
 
-    const refreshData = () => {
-        queryClient.invalidateQueries({ queryKey: ['recentScheduledAppointments'] });
+    const refreshData = async () => {
+        await queryClient.invalidateQueries({ queryKey: ['recentScheduledAppointments'] });
     };
 
     return (

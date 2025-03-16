@@ -10,20 +10,11 @@ import { AxiosError } from 'axios';
  * @returns Query object containing recent test results requests.
  */
 export const useRecentTestResultsRequests = (limit: number = 5) => {
-    const { isAuthed, clearAuth } = useAuth();
+    const { isAuthed } = useAuth();
 
     return useQuery<GetRecentTestResultsRequestsResponse>({
         queryKey: ['recentTestResultsRequests', limit],
-        queryFn: () => {
-            try {
-                return getRecentTestResultsRequests(limit);
-            } catch (error) {
-                if (error instanceof AxiosError && error.response?.status === 401) {
-                    clearAuth();
-                }
-                throw error;
-            }
-        },
+        queryFn: () => getRecentTestResultsRequests(limit),
         enabled: isAuthed,
     });
 };

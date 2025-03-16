@@ -16,7 +16,7 @@ const UnAuthGuard = ({ children, reroute = '/' }: UnAuthGuardProps) => {
 
     useEffect(() => {
         if (isInitialized && isAuthed) {
-            router.push(reroute || '/');
+            router.refresh();
         }
     }, [isInitialized, isAuthed, reroute, router]);
 

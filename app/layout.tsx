@@ -30,19 +30,19 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className={`${manrope.variable}`}>
-                <ReactQueryProvider>
-                    <AppRouterCacheProvider>
-                        <ToasterProvider>
-                            <AuthProvider>
+                <AppRouterCacheProvider>
+                    <ToasterProvider>
+                        <AuthProvider>
+                            <ReactQueryProvider>
                                 <ThemeProvider theme={theme}>
                                     <CssBaseline />
                                     <Navbar />
                                     {children}
                                 </ThemeProvider>
-                            </AuthProvider>
-                        </ToasterProvider>
-                    </AppRouterCacheProvider>
-                </ReactQueryProvider>
+                            </ReactQueryProvider>
+                        </AuthProvider>
+                    </ToasterProvider>
+                </AppRouterCacheProvider>
             </body>
         </html>
     );

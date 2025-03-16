@@ -10,13 +10,13 @@ export const useLogout = () => {
     const { setToaster } = useToaster();
 
     return useMutation({
-        mutationFn: async () => {
-            const accessToken = getAccessToken();
-            const refreshToken = getRefreshToken();
+        mutationFn: () => {
+            const accessToken = getAccessToken() || 'test';
+            const refreshToken = getRefreshToken() || 'test';
             if (!accessToken || !refreshToken) {
                 throw new Error('Access token or refresh token not available');
             }
-            return await logoutUser(accessToken, refreshToken);
+            return logoutUser(accessToken, refreshToken);
         },
         onSuccess: () => {
             queryClient.invalidateQueries();

@@ -11,8 +11,8 @@ export default function AppointmentsByDateTable() {
     const { data, isLoading, isError } = useScheduledAppointmentsByDate(selectedDate);
     const appointments = data?.scheduled_appointments || [];
 
-    const refreshData = () => {
-        queryClient.invalidateQueries({ queryKey: ['scheduledAppointments'] });
+    const refreshData = async () => {
+        await queryClient.invalidateQueries({ queryKey: ['scheduledAppointments'] });
     };
 
     return (
