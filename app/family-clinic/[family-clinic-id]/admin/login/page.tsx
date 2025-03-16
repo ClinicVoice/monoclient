@@ -36,7 +36,7 @@ export default function AdminLogin() {
         loginMutation.mutate(data, {
             onSuccess: () => {
                 setToaster('Login successful!', 'success');
-                // TLDR: fix to prevent rapid inputs + server call + router push causeing browser tab crash
+                // TLDR: using setTimeout to defer router.push to avoid immediate state changes that crash the browser
                 // spent too long on this to think of another solution tbh
                 setTimeout(() => {
                     router.push(`/family-clinic/${familyClinicId}/admin/dashboard`);
