@@ -1,0 +1,130 @@
+name: Format, Build, and Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  setup:
+    name: Setup Environment
+    runs-on: ubuntu-latest
+    outputs:
+      cache-hit: ${{ steps.cache-deps.outputs.cache-hit }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'yarn'
+
+      - name: Cache dependencies
+        id: cache-deps
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        if: steps.cache-deps.outputs.cache-hit != 'true'
+        run: yarn install --frozen-lockfile
+
+  prettier:
+    name: Prettier Check
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'yarn'
+
+      - name: Restore cached dependencies
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Run Prettier Check
+        run: yarn format --check
+
+  eslint:
+    name: ESLint Check
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'yarn'
+
+      - name: Restore cached dependencies
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Run ESLint Check
+        run: yarn next-lint
+
+  build:
+    name: Build Project
+    runs-on: ubuntu-latest
+    needs: [prettier, eslint]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'yarn'
+
+      - name: Restore cached dependencies
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Run Build
+        run: yarn build
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [ prettier, eslint, build ]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Deploy to DigitalOcean using SSH
+        uses: appleboy/ssh-action@v0.1.3
+        with:
+          host: "159.203.29.72"
+          username: "clinicvoice"
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          script: |
+            cd ~/monoclient
+            git pull origin main
+            yarn install --frozen-lockfile
+            yarn build || { echo "Build failed!"; exit 1; }
+            pm2 restart monoclient || { echo "PM2 restart failed!"; exit 1; }
+
+      - name: Wait for server to start
+        run: sleep 10
+
+      - name: Perform Production Health Check
+        run: curl -f https://portal.clinicvoice.ai || exit 1

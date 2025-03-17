@@ -1,12 +1,9 @@
-name: Format and Deploy
+name: Format and Build
 
 on:
-    push:
-        branches:
-            - main
-    pull_request:
-        branches:
-            - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
     setup:
