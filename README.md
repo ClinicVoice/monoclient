@@ -1,4 +1,4 @@
-# Monoclient - ClinicVoice AI
+# Monoclient
 
 This is the **monoclient** repository for **ClinicVoice AI**, a monolithic application encompassing all domain services in one app. The project is built using [Next.js](https://nextjs.org/) and is bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
@@ -17,6 +17,12 @@ yarn dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser to view the application.
+
+Alternatively, you can use Docker Compose to run the application:
+
+```bash
+docker-compose up --build
+```
 
 ### Editing the Application
 
@@ -60,9 +66,7 @@ This project uses the following libraries and frameworks:
 
 ## Deployment
 
-This project is set up for **automatic deployment to Netlify** with GitHub pull request (PR) previews enabled. Each branch will generate a preview URL on Netlify for testing before merging.
-
-For more information on Next.js deployment, refer to the [Next.js deployment documentation](https://nextjs.org/docs/deployment).
+This project is set up for **automatic deployment to a DigitalOcean Droplet** on merge to the `main` branch. The deployment process is managed using Docker Compose and GitHub Actions.
 
 ## Learn More
 

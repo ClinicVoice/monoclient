@@ -118,28 +118,14 @@ jobs:
           username: "clinicvoice"
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           script: |
-            export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-            
             cd ~/monoclient
             git pull origin main
-            
-            if ! command -v node &> /dev/null; then
-            echo "Node.js not found. Installing..."
-            curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash - && sudo apt-get install -y nodejs
-            fi
-            
-            if ! command -v yarn &> /dev/null; then
-              echo "Yarn not found. Installing..."
-              npm install -g yarn || { echo "Yarn installation failed!"; exit 1; }
-            fi
-            
-            yarn -v
-            yarn install --frozen-lockfile || { echo "Yarn install failed!"; exit 1; }
-            yarn build || { echo "Build failed!"; exit 1; }
-            pm2 restart monoclient || { echo "PM2 restart failed!"; exit 1; }
+            docker compose down || true
+            docker compose up -d --build
+            docker image prune -f
 
       - name: Wait for server to start
-        run: sleep 10
+        run: sleep 25
 
       - name: Perform Production Health Check
         run: curl -f https://portal.clinicvoice.ai || exit 1
