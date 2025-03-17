@@ -104,6 +104,7 @@ jobs:
         run: yarn build
 
   deploy:
+    name: Deploy Project
     runs-on: ubuntu-latest
     needs: [ prettier, eslint, build ]
     steps:
@@ -121,6 +122,11 @@ jobs:
             
             cd ~/monoclient
             git pull origin main
+            
+            if ! command -v node &> /dev/null; then
+            echo "Node.js not found. Installing..."
+            curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash - && sudo apt-get install -y nodejs
+            fi
             
             if ! command -v yarn &> /dev/null; then
               echo "Yarn not found. Installing..."
