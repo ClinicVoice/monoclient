@@ -16,7 +16,7 @@ Then, run the development server:
 yarn dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser to view the application.
+Open [http://localhost:8080](http://localhost:8080) in your browser to view the application.
 
 Alternatively, you can use Docker Compose to run the application:
 
