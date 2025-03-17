@@ -34,8 +34,9 @@ export const AdminLoginForm = ({ familyClinicId }: AdminLoginFormProps) => {
     const onSubmit = (data: LoginRequest) => {
         loginMutation.mutate(data, {
             onSuccess: () => {
-                setToaster('Login successful!', 'success');
-                router.push(`/family-clinic/${familyClinicId}/admin/dashboard`);
+                setTimeout(() => {
+                    router.push(`/family-clinic/${familyClinicId}/admin/dashboard`);
+                }, 0);
             },
             onError: () => {
                 setToaster('Invalid credentials. Please try again.', 'error');
