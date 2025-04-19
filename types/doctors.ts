@@ -1,0 +1,13 @@
+export interface CreateDoctorRequest {
+    name: string;
+    clinic_id: number;
+    default_appt_duration_minutes: number;
+}
+
+export interface DoctorRead {
+    id: number;
+    name: string;
+    clinic_id: number;
+    created_at: string; // ISO‑8601 datetime
+    default_appt_duration_minutes: number;
+}

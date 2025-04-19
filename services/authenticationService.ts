@@ -2,7 +2,7 @@ import { LoginRequest, LoginResponse } from '@/types/authentication';
 import axiosInstance from '@/instances/axiosInstance';
 
 export const loginUser = async (data: LoginRequest): Promise<LoginResponse> => {
-    const response = await axiosInstance.post(`/authentication/login`, {
+    const response = await axiosInstance.post(`/public/accounts/login`, {
         email: data.email,
         password: data.password,
     });
@@ -17,7 +17,7 @@ export const loginUser = async (data: LoginRequest): Promise<LoginResponse> => {
 };
 
 export const logoutUser = async (accessToken: string, refreshToken: string) => {
-    const response = await axiosInstance.post('/authentication/logout', {
+    const response = await axiosInstance.post('/public/accounts/logout', {
         access_token: accessToken,
         refresh_token: refreshToken,
     });

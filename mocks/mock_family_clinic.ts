@@ -1,4 +1,4 @@
-import { FamilyClinicConfig } from '@/types/family_clinic/family_clinic';
+import { FamilyClinicConfig } from '@/types/clinics';
 
 export const mockFamilyClinic: FamilyClinicConfig = {
     family_clinic_id: '1',
