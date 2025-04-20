@@ -2,7 +2,7 @@
 
 import { Button } from '@mui/material';
 import { useRouter } from 'next/navigation';
-import { useLogout } from '@/hooks/users/useLogout';
+import { useLogout } from '@/hooks/authentication/useLogout';
 
 interface LogoutButtonProps {
     redirectTo?: string;

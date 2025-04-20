@@ -8,23 +8,20 @@ import Loading from '@/components/loading/Loading';
 
 interface AuthGuardProps {
     children: React.ReactNode;
-    showToast?: boolean;
     reroute?: string;
 }
 
-const AuthGuard = ({ children, reroute = '/login', showToast = true }: AuthGuardProps) => {
+const AuthGuard = ({ children, reroute = '/login' }: AuthGuardProps) => {
     const { isAuthed, isInitialized } = useAuth();
     const router = useRouter();
     const { setToaster } = useToaster();
 
     useEffect(() => {
         if (isInitialized && !isAuthed) {
-            if (showToast) {
-                setToaster('Not authorized to access this page. Redirecting...', 'error');
-            }
+            setToaster('Not authorized to access this page. Redirecting...', 'error');
             router.push(reroute || '/login');
         }
-    }, [isInitialized, isAuthed, reroute, router, showToast, setToaster]);
+    }, [isAuthed, isInitialized, reroute, router, setToaster]);
 
     if (!isAuthed || !isInitialized) {
         return <Loading />;
