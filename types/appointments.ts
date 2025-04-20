@@ -1,3 +1,5 @@
+import { PatientRead } from '@/types/patients';
+
 export interface CreateAppointmentForm {
     doctor_id: number;
     health_card_number: string;
@@ -27,6 +29,7 @@ export interface AppointmentRead {
     appt_start_time: string; // ISO‑8601 datetime
     appt_duration_minutes: number;
     appt_end_time: string; // ISO‑8601 datetime
+    patient: PatientRead;
     notes?: string;
     created_at: string; // ISO‑8601 datetime
 }

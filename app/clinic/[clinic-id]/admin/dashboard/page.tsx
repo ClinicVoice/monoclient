@@ -1,22 +1,23 @@
 'use client';
 
+import React from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Typography, Button, Box, Divider } from '@mui/material';
 import LogoutButton from '@/components/buttons/LogoutButton';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { DashboardContainer } from '@/app/clinic/[clinic-id]/admin/dashboard/styles';
-import { useFamilyClinicInfo } from '@/hooks/family_clinic/useFamilyClinicInfo';
+import { useClinic } from '@/hooks/clinics/useClinic';
 import Loading from '@/components/loading/Loading';
 import ErrorScreen from '@/components/screens/ErrorScreen';
 import { parseClinicIdFromUrlParams } from '@/utils/paramUtils';
 import { AppointmentsForDoctorCalendarView } from '@/components/clinic/admin/AppointmentsForDoctorCalendarView/AppointmentsForDoctorCalendarView';
-import RecentResultRequestsTable from '@/components/clinic/admin/RecentResultRequestsTable';
+import ResultRequestsTable from '@/components/clinic/admin/ResultRequestsTable';
 
 export default function AdminDashboard() {
     const params = useParams();
-    const familyClinicId = parseClinicIdFromUrlParams(params);
+    const clinicId = parseClinicIdFromUrlParams(params);
     const router = useRouter();
-    const { data: clinic, isLoading, error } = useFamilyClinicInfo(familyClinicId);
+    const { data: clinic, isLoading, error } = useClinic(clinicId);
 
     if (isLoading) {
         return <Loading />;
@@ -41,7 +42,7 @@ export default function AdminDashboard() {
                     <Button
                         variant="contained"
                         color="secondary"
-                        onClick={() => router.push(`/family-clinic/${familyClinicId}`)}
+                        onClick={() => router.push(`/clinic/${clinicId}`)}
                     >
                         Back to Home
                     </Button>
@@ -67,13 +68,12 @@ export default function AdminDashboard() {
                         variant="contained"
                         color="secondary"
                         startIcon={<SettingsIcon />}
-                        onClick={() =>
-                            router.push(`/family-clinic/${familyClinicId}/admin/dashboard/settings`)
-                        }
+                        onClick={() => router.push(`/clinic/${clinicId}/admin/dashboard/settings`)}
+                        disabled={true}
                     >
                         Settings
                     </Button>
-                    <LogoutButton redirectTo={`/family-clinic/${familyClinicId}`} />
+                    <LogoutButton redirectTo={`/clinic/${clinicId}`} />
                 </Box>
             </Box>
 
@@ -97,7 +97,7 @@ export default function AdminDashboard() {
                 />
             </Box>
 
-            <RecentResultRequestsTable />
+            <ResultRequestsTable />
         </DashboardContainer>
     );
 }

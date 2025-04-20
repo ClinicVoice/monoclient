@@ -3,6 +3,7 @@ export interface CreateClinicRequest {
     address: string;
     phone: string;
     email: string;
+    accepting_new_patients: boolean;
 }
 
 export interface ClinicUpdateRequest {
@@ -10,6 +11,7 @@ export interface ClinicUpdateRequest {
     address?: string;
     phone?: string;
     email?: string;
+    accepting_new_patients?: boolean;
 }
 
 export interface ClinicRead {
@@ -18,5 +20,6 @@ export interface ClinicRead {
     address: string;
     phone: string;
     email: string;
+    accepting_new_patients: boolean;
     created_at: string; // ISO‑8601 datetime
 }

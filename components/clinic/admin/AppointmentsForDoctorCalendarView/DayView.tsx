@@ -3,21 +3,22 @@
 import React from 'react';
 import { format, differenceInMinutes } from 'date-fns';
 import { Box, Typography, Skeleton } from '@mui/material';
-import { useScheduledAppointmentsByDate } from '@/hooks/family_clinic/useScheduledAppointmentsByDate';
+import { useAppointmentsForDoctorByDate } from '@/hooks/doctors/useAppointmentsForDoctorByDate';
 import { AppointmentRead } from '@/types/appointments';
 import { TimeHeightAppointmentCard } from '@/components/clinic/admin/AppointmentsForDoctorCalendarView/TimeHeightAppointmentCard';
 
 const totalMinutes = 12 * 60; // 720 minutes from 8 AM to 8 PM
 
 export interface DayViewProps {
+    doctorId: number;
     date: Date;
     onSelectAppointment: (app: AppointmentRead) => void;
 }
 
-export const DayView = ({ date, onSelectAppointment }: DayViewProps) => {
+export const DayView = ({ doctorId, date, onSelectAppointment }: DayViewProps) => {
     const formattedDate = format(date, 'yyyy-MM-dd');
-    const { data, isLoading, error } = useScheduledAppointmentsByDate(formattedDate);
-    const appointments: AppointmentRead[] = data?.scheduled_appointments || [];
+    const { data, isLoading, error } = useAppointmentsForDoctorByDate(doctorId, formattedDate);
+    const appointments: AppointmentRead[] = data || [];
     const dayStart = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 8, 0, 0);
 
     return (
@@ -76,6 +77,7 @@ export const DayView = ({ date, onSelectAppointment }: DayViewProps) => {
                         }}
                     />
                 ))}
+
                 {isLoading ? (
                     <Skeleton variant="rectangular" width="100%" height="100%" />
                 ) : error ? (
@@ -88,15 +90,13 @@ export const DayView = ({ date, onSelectAppointment }: DayViewProps) => {
                     </Typography>
                 ) : (
                     appointments.map((appointment) => {
-                        const startTime = new Date(
-                            parseInt(appointment.appointment_time_epoch) * 1000,
-                        );
-                        const durationMinutes = parseInt(appointment.duration);
+                        const startTime = new Date(appointment.appt_start_time);
+                        const durationMinutes = appointment.appt_duration_minutes;
                         const minutesFromStart = differenceInMinutes(startTime, dayStart);
                         if (minutesFromStart < 0 || minutesFromStart > totalMinutes) return null;
                         return (
                             <Box
-                                key={appointment.request_timestamp}
+                                key={appointment.id}
                                 sx={{
                                     position: 'absolute',
                                     top: minutesFromStart,

@@ -9,10 +9,10 @@ import { ButtonContainer, LoginCard } from '@/app/clinic/[clinic-id]/admin/login
 import { LoginRequest } from '@/types/authentication';
 
 interface AdminLoginFormProps {
-    familyClinicId: string;
+    clinicId: number;
 }
 
-export const AdminLoginForm = ({ familyClinicId }: AdminLoginFormProps) => {
+export const AdminLoginForm = ({ clinicId }: AdminLoginFormProps) => {
     const router = useRouter();
     const { setToaster } = useToaster();
     const loginMutation = useLogin();
@@ -32,7 +32,7 @@ export const AdminLoginForm = ({ familyClinicId }: AdminLoginFormProps) => {
         loginMutation.mutate(data, {
             onSuccess: () => {
                 setTimeout(() => {
-                    router.push(`/family-clinic/${familyClinicId}/admin/dashboard`);
+                    router.push(`/clinic/${clinicId}/admin/dashboard`);
                 }, 0);
             },
             onError: () => {
@@ -92,7 +92,7 @@ export const AdminLoginForm = ({ familyClinicId }: AdminLoginFormProps) => {
                         variant="contained"
                         color="secondary"
                         fullWidth
-                        onClick={() => router.push(`/family-clinic/${familyClinicId}`)}
+                        onClick={() => router.push(`/clinic/${clinicId}`)}
                     >
                         Back
                     </Button>

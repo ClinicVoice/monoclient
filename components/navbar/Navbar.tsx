@@ -16,7 +16,7 @@ export default function Navbar() {
                 <LogoContainer
                     onClick={() => {
                         if (familyClinicId) {
-                            router.push(`/family-clinic/${familyClinicId}`);
+                            router.push(`/clinic/${familyClinicId}`);
                         }
                     }}
                 >

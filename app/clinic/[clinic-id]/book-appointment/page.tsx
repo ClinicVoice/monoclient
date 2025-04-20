@@ -8,13 +8,11 @@ import { parseClinicIdFromUrlParams } from '@/utils/paramUtils';
 export default function BookAppointment() {
     const params = useParams();
     const router = useRouter();
-    const familyClinicId = parseClinicIdFromUrlParams(params);
+    const clinicId = parseClinicIdFromUrlParams(params);
 
     return (
         <ModuleContainer>
-            <BookAppointmentComponent
-                onExit={() => router.push(`/family-clinic/${familyClinicId}`)}
-            />
+            <BookAppointmentComponent onExit={() => router.push(`/clinic/${clinicId}`)} />
         </ModuleContainer>
     );
 }

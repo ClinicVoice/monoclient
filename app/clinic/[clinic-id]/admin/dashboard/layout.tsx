@@ -5,11 +5,7 @@ import { useParams } from 'next/navigation';
 
 export default function AdminDashboardLayout({ children }: { children: React.ReactNode }) {
     const params = useParams();
-    const familyClinicId = params['family-clinic-id'];
+    const familyClinicId = params['clinic-id'];
 
-    return (
-        <AuthGuard showToast={false} reroute={`/family-clinic/${familyClinicId}/admin/login`}>
-            {children}
-        </AuthGuard>
-    );
+    return <AuthGuard reroute={`/clinic/${familyClinicId}/admin/login`}>{children}</AuthGuard>;
 }

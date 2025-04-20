@@ -7,11 +7,12 @@ import { AppointmentRead } from '@/types/appointments';
 import { MonthDayCell } from '@/components/clinic/admin/AppointmentsForDoctorCalendarView/MonthView/MonthDayCell';
 
 export interface MonthViewProps {
+    doctorId: number;
     currentDate: Date;
     onSelectAppointment: (app: AppointmentRead) => void;
 }
 
-export const MonthView = ({ currentDate, onSelectAppointment }: MonthViewProps) => {
+export const MonthView = ({ doctorId, currentDate, onSelectAppointment }: MonthViewProps) => {
     const monthStart = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
     const monthEnd = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
     const start = startOfWeek(monthStart, { weekStartsOn: 0 });
@@ -45,6 +46,7 @@ export const MonthView = ({ currentDate, onSelectAppointment }: MonthViewProps) 
             {days.map((day, index) => (
                 <MonthDayCell
                     key={index}
+                    doctorId={doctorId}
                     day={day}
                     currentMonth={currentDate.getMonth()}
                     onSelectAppointment={onSelectAppointment}

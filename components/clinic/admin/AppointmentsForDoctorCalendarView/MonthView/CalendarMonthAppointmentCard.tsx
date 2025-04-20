@@ -11,28 +11,14 @@ export interface AppointmentCardProps {
 }
 
 export const CalendarMonthAppointmentCard = ({ appointment, onClick }: AppointmentCardProps) => {
-    let displayName: string;
-    if (
-        !appointment.first_name ||
-        !appointment.last_name ||
-        (appointment.first_name.trim() === '' && appointment.last_name.trim() === '')
-    ) {
-        displayName = 'Name N/A';
-    } else {
-        const firstName = appointment.first_name.trim();
-        const lastName = appointment.last_name.trim();
-        displayName = `${lastName}, ${firstName}`;
-    }
+    const startDate = new Date(appointment.appt_start_time);
+    const startTime = format(startDate, 'h:mm a');
 
-    const title =
-        appointment.appointment_type && appointment.appointment_type.trim() !== ''
-            ? appointment.appointment_type
-            : 'General Checkup';
+    const firstName = appointment.patient?.first_name?.trim();
+    const lastName = appointment.patient?.surname?.trim();
+    const displayName = firstName && lastName ? `${lastName}, ${firstName}` : 'Name N/A';
 
-    const startTimeEpoch = parseInt(appointment.appointment_time_epoch, 10);
-    const startDateTime = new Date(startTimeEpoch * 1000);
-    const startTime = format(startDateTime, 'h:mm a');
-
+    const title = 'Appointment';
     const hasNotes = appointment.notes && appointment.notes.trim() !== '';
 
     return (
@@ -46,13 +32,10 @@ export const CalendarMonthAppointmentCard = ({ appointment, onClick }: Appointme
                 backgroundColor: '#e3f2fd',
                 color: '#1565c0',
                 borderRadius: 1,
-                cursor: 'pointer',
+                cursor: onClick ? 'pointer' : 'default',
                 transition: 'box-shadow 0.3s',
-                overflowY: 'hidden',
-                overflowX: 'hidden',
-                '&:hover': {
-                    boxShadow: 3,
-                },
+                overflow: 'hidden',
+                '&:hover': onClick ? { boxShadow: 3 } : {},
             }}
         >
             <Box

@@ -1,22 +1,21 @@
 'use client';
 
+import React, { useState } from 'react';
 import { Typography, Stepper, Step, StepLabel } from '@mui/material';
-import { useState } from 'react';
 import { useParams } from 'next/navigation';
 import { FormContainer } from '@/app/clinic/[clinic-id]/book-appointment/styles';
-import { useCreateAppointment } from '@/hooks/family_clinic/useCreateAppointment';
+import { useCreateAppointment } from '@/hooks/appointments/useCreateAppointment';
+import { useClinic } from '@/hooks/clinics/useClinic';
 import Step1SelectAppointment from '@/components/forms/book-appointment/Step1SelectAppointment';
 import Step2EnterContactInfo from '@/components/forms/book-appointment/Step2EnterContactInfo';
 import ConfirmAppointmentModal from '@/components/forms/book-appointment/ConfirmAppointmentModal';
 import { useToaster } from '@/providers/ToasterProvider';
 import { CreateAppointmentForm, SetAppointmentField } from '@/types/appointments';
-import { convertTo24HourFormat } from '@/utils/dateTimeUtils';
+import { CreateAppointmentRequest } from '@/types/appointments';
 import { parseClinicIdFromUrlParams } from '@/utils/paramUtils';
-import { useFamilyClinicInfo } from '@/hooks/family_clinic/useFamilyClinicInfo';
 import Loading from '@/components/loading/Loading';
 import ErrorScreen from '@/components/screens/ErrorScreen';
-import { isValidPhoneNumber } from 'libphonenumber-js';
-import { isValidEmail } from '@/utils/inputValidationUtils';
+import { AxiosError } from 'axios';
 
 const steps = ['Select Appointment', 'Enter Contact Info'];
 
@@ -26,86 +25,53 @@ interface BookAppointmentComponentProps {
 
 export default function BookAppointmentComponent({ onExit }: BookAppointmentComponentProps) {
     const params = useParams();
-    const familyClinicId = parseClinicIdFromUrlParams(params);
+    const clinicId = parseClinicIdFromUrlParams(params);
     const { setToaster } = useToaster();
     const [step, setStep] = useState(0);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
-    const [errors, setErrors] = useState<{ [key: string]: string }>({});
+    const [errors, setErrors] = useState<Record<string, string>>({});
+
     const [appointment, setAppointment] = useState<CreateAppointmentForm>({
-        provider: '',
-        appointment_type: '',
-        note: '',
-        date: '',
-        time: '',
-        hasHealthCard: true,
-        healthCardNumber: '',
-        healthCardVersion: '',
-        firstName: '',
-        lastName: '',
-        birthday: '',
-        sex: '',
-        contact: '',
-        email: '',
-        pharmacy: '',
-        duration: 30,
+        doctor_id: 0,
+        health_card_number: '',
+        phone_number: '',
+        appt_start_time: '',
+        appt_duration_minutes: 15,
+        notes: '',
     });
 
-    const { data: clinic, isLoading, error } = useFamilyClinicInfo(familyClinicId);
+    const { data: clinic, isLoading: clinicLoading, error: clinicError } = useClinic(clinicId);
     const { mutate: createAppointment, isPending } = useCreateAppointment();
 
-    const updateAppointmentField: SetAppointmentField = (field: string, value: unknown) => {
-        setAppointment((prev: CreateAppointmentForm) => ({
-            ...prev,
-            [field]: value,
-        }));
+    const updateAppointmentField: SetAppointmentField = (field, value) => {
+        setAppointment((prev) => ({ ...prev, [field]: value }));
     };
 
     const validateStep1 = () => {
-        const newErrors: { [key: string]: string } = {};
-        if (!appointment.provider) newErrors.provider = 'Provider is required';
-        if (!appointment.appointment_type)
-            newErrors.appointment_type = 'Appointment Type is required';
-        if (!appointment.note) newErrors.note = 'Reason for Visit is required';
-        if (!appointment.date) newErrors.date = 'Date is required';
-        if (!appointment.time) newErrors.time = 'Time is required';
+        const newErrors: Record<string, string> = {};
+        if (!appointment.doctor_id) newErrors.doctor_id = 'Doctor is required';
+        if (!appointment.appt_start_time) newErrors.appt_start_time = 'Time is required';
+        if (!appointment.appt_duration_minutes || appointment.appt_duration_minutes <= 0)
+            newErrors.appt_duration_minutes = 'Duration must be greater than 0';
+        if (!appointment.notes) newErrors.notes = 'Notes are required';
         setErrors(newErrors);
-
         if (Object.keys(newErrors).length > 0) {
-            setToaster('Please complete all required contact details.', 'error');
+            setToaster('Please complete all required fields.', 'error');
+            return false;
         }
-
-        return Object.keys(newErrors).length === 0;
+        return true;
     };
-
     const validateStep2 = () => {
-        const newErrors: { [key: string]: string } = {};
-        if (appointment.hasHealthCard) {
-            if (!appointment.healthCardNumber)
-                newErrors.healthCardNumber = 'Health Card Number is required';
-            if (!appointment.healthCardVersion) newErrors.healthCardVersion = 'Version is required';
-        } else {
-            if (!appointment.firstName) newErrors.firstName = 'First Name is required';
-            if (!appointment.lastName) newErrors.lastName = 'Last Name is required';
-            if (!appointment.sex) newErrors.sex = 'Sex is required';
-            if (!appointment.birthday) newErrors.birthday = 'Birthday is required';
-        }
-        if (!appointment.contact) {
-            newErrors.contact = 'Phone Number is required';
-        } else if (!isValidPhoneNumber(appointment.contact)) {
-            newErrors.contact = 'Please enter a valid phone number';
-        }
-        if (!appointment.email) {
-            newErrors.email = 'Email is required';
-        } else if (!isValidEmail(appointment.email)) {
-            newErrors.email = 'Please enter a valid email address';
-        }
+        const newErrors: Record<string, string> = {};
+        if (!appointment.health_card_number)
+            newErrors.health_card_number = 'Health card number is required';
+        if (!appointment.phone_number) newErrors.phone_number = 'Phone number is required';
         setErrors(newErrors);
-
         if (Object.keys(newErrors).length > 0) {
-            setToaster('Please complete all required contact details.', 'error');
+            setToaster('Please complete all contact info.', 'error');
+            return false;
         }
-
-        return Object.keys(newErrors).length === 0;
+        return true;
     };
 
     const handleNext = () => {
@@ -113,53 +79,27 @@ export default function BookAppointmentComponent({ onExit }: BookAppointmentComp
     };
 
     const handleBack = () => setStep((prev) => prev - 1);
-
-    const handleReviewAppointment = () => {
-        if (!validateStep2()) return;
-        setShowConfirmModal(true);
+    const handleReview = () => {
+        if (validateStep2()) setShowConfirmModal(true);
     };
 
-    const handleConfirmAppointment = () => {
-        const date = appointment.date;
-        const time = convertTo24HourFormat(appointment.time);
-        const appointmentDateTime = new Date(`${date}T${time}:00Z`).toISOString();
-
-        createAppointment(
-            {
-                provider: appointment.provider,
-                appointment_type: appointment.appointment_type,
-                health_card_number: appointment.hasHealthCard ? appointment.healthCardNumber : '',
-                health_card_version: appointment.hasHealthCard ? appointment.healthCardVersion : '',
-                first_name: appointment.firstName,
-                last_name: appointment.lastName,
-                phone_number: appointment.contact,
-                email: appointment.email,
-                appointment_date_time: appointmentDateTime,
-                birth_date: appointment.birthday,
-                sex: appointment.sex,
-                pharmacy: '',
-                notes: appointment.note,
-                duration: appointment.duration,
+    const handleConfirm = () => {
+        const payload: CreateAppointmentRequest = appointment;
+        createAppointment(payload, {
+            onSuccess: () => {
+                setToaster('Appointment successfully booked!', 'success');
+                onExit();
             },
-            {
-                onSuccess: () => {
-                    setToaster('Appointment successfully booked!', 'success');
-                    onExit();
-                },
-                onError: () => {
-                    setToaster('Failed to book appointment. Please try again.', 'error');
-                },
+            onError: (err: AxiosError) => {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-expect-error
+                setToaster(err?.response?.data?.detail || 'Failed to book appointment', 'error');
             },
-        );
+        });
     };
 
-    if (isLoading) {
-        return <Loading />;
-    }
-
-    if (error || !clinic) {
-        return <ErrorScreen message="Error loading clinic information." />;
-    }
+    if (clinicLoading) return <Loading />;
+    if (clinicError || !clinic) return <ErrorScreen message="Error loading clinic information." />;
 
     return (
         <FormContainer>
@@ -169,13 +109,9 @@ export default function BookAppointmentComponent({ onExit }: BookAppointmentComp
             <Typography variant="h3" gutterBottom>
                 Book an Appointment
             </Typography>
-            <Stepper
-                activeStep={step}
-                alternativeLabel
-                sx={{ width: '100%', maxWidth: 600, mb: 4, mt: 2 }}
-            >
-                {steps.map((label, index) => (
-                    <Step key={index}>
+            <Stepper activeStep={step} alternativeLabel sx={{ mb: 4 }}>
+                {steps.map((label, idx) => (
+                    <Step key={idx}>
                         <StepLabel>{label}</StepLabel>
                     </Step>
                 ))}
@@ -195,18 +131,20 @@ export default function BookAppointmentComponent({ onExit }: BookAppointmentComp
                     updateAppointmentField={updateAppointmentField}
                     errors={errors}
                     handleBack={handleBack}
-                    handleSubmit={handleReviewAppointment}
+                    handleSubmit={handleReview}
                     isPending={isPending}
                 />
             )}
 
-            <ConfirmAppointmentModal
-                open={showConfirmModal}
-                appointment={appointment}
-                onClose={() => setShowConfirmModal(false)}
-                onConfirm={handleConfirmAppointment}
-                isPending={isPending}
-            />
+            {showConfirmModal && (
+                <ConfirmAppointmentModal
+                    open={showConfirmModal}
+                    appointment={appointment}
+                    onClose={() => setShowConfirmModal(false)}
+                    onConfirm={handleConfirm}
+                    isPending={isPending}
+                />
+            )}
         </FormContainer>
     );
 }

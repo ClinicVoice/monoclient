@@ -1,18 +1,22 @@
+import React from 'react';
 import { Typography, Box, CircularProgress, Alert } from '@mui/material';
+import { parse, format } from 'date-fns';
 import { useOpeningHoursForClinic } from '@/hooks/clinics/useOpeningHoursForClinic';
 
 interface ClinicOpeningHoursDisplayProps {
     clinicId: number;
 }
 
+const DAY_ORDER = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+
 const ClinicOpeningHoursDisplay = ({ clinicId }: ClinicOpeningHoursDisplayProps) => {
-    const { data: openingHours, isLoading, error } = useOpeningHoursForClinic(clinicId);
+    const { data, isLoading, error } = useOpeningHoursForClinic(clinicId);
 
     if (isLoading) {
         return (
-            <Box marginY={2} display="flex" alignItems="center">
+            <Box my={2} display="flex" alignItems="center">
                 <CircularProgress size={20} />
-                <Typography variant="body2" marginLeft={1}>
+                <Typography variant="body2" ml={1}>
                     Loading opening hours...
                 </Typography>
             </Box>
@@ -21,26 +25,39 @@ const ClinicOpeningHoursDisplay = ({ clinicId }: ClinicOpeningHoursDisplayProps)
 
     if (error) {
         return (
-            <Box marginY={2}>
+            <Box my={2}>
                 <Alert severity="error">Failed to load opening hours.</Alert>
             </Box>
         );
     }
 
-    if (!openingHours) {
+    if (!data?.opening_hours) {
         return null;
     }
 
     return (
-        <Box marginY={2}>
+        <Box my={2}>
             <Typography variant="body1" fontWeight="bold">
                 Opening Hours:
             </Typography>
-            {Object.entries(openingHours).map(([day, hours]) => (
-                <Typography variant="body2" key={day}>
-                    {day}: {hours ? `${hours.open} - ${hours.close}` : 'Closed'}
-                </Typography>
-            ))}
+            {DAY_ORDER.map((day) => {
+                const dayLabel = day.charAt(0).toUpperCase() + day.slice(1);
+                const hours = data.opening_hours[day as keyof typeof data.opening_hours];
+                if (!hours) {
+                    return (
+                        <Typography variant="body2" key={day}>
+                            {dayLabel}: Closed
+                        </Typography>
+                    );
+                }
+                const openTime = format(parse(hours.open_time, 'HH:mm:ss', new Date()), 'h:mm a');
+                const closeTime = format(parse(hours.close_time, 'HH:mm:ss', new Date()), 'h:mm a');
+                return (
+                    <Typography variant="body2" key={day}>
+                        {dayLabel}: {openTime} - {closeTime}
+                    </Typography>
+                );
+            })}
         </Box>
     );
 };

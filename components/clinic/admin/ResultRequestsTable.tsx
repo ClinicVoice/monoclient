@@ -15,29 +15,28 @@ import {
     Box,
 } from '@mui/material';
 import { TableCard } from '@/components/clinic/admin/styles';
-import { ResultRequestRead } from '@/types/resultRequests';
 import { exportResultRequestsToCSV } from '@/utils/exportUtils';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import { useParams } from 'next/navigation';
+import { parseClinicIdFromUrlParams } from '@/utils/paramUtils';
+import { useResultRequestsByClinic } from '@/hooks/clinics/useResultRequestsByClinic';
+import { ResultRequestRead } from '@/types/resultRequests';
 
-interface ResultRequestsTableProps {
-    title: string;
-    children?: React.ReactNode;
-    resultRequests: ResultRequestRead[];
-    isLoading?: boolean;
-    isError?: boolean;
-    onRefresh?: () => void;
-    onExportFilename: string;
-}
+export default function ResultRequestsTable() {
+    const params = useParams();
+    const clinicId = parseClinicIdFromUrlParams(params);
 
-export default function ResultRequestsTable({
-    title,
-    children,
-    resultRequests,
-    isLoading,
-    isError,
-    onRefresh,
-    onExportFilename,
-}: ResultRequestsTableProps) {
+    const {
+        data: resultRequests = [],
+        isLoading,
+        error,
+        refetch,
+    } = useResultRequestsByClinic(clinicId);
+    const isError = !!error;
+
+    const title = 'Test Results Requests';
+    const onExportFilename = `clinic-${clinicId}-result-requests`;
+
     return (
         <TableCard>
             <Typography variant="h3" gutterBottom>
@@ -46,23 +45,24 @@ export default function ResultRequestsTable({
 
             {!isLoading && !isError && resultRequests.length > 0 && (
                 <Box display="flex" justifyContent="space-between" mt={2}>
-                    {onRefresh && (
-                        <Button variant="contained" color="secondary" onClick={onRefresh}>
-                            Refresh
-                        </Button>
-                    )}
+                    <Button variant="contained" color="secondary" onClick={() => refetch()}>
+                        Refresh
+                    </Button>
                     <Button
                         variant="contained"
                         color="primary"
-                        onClick={() => exportResultRequestsToCSV(resultRequests, onExportFilename)}
+                        onClick={() =>
+                            exportResultRequestsToCSV(
+                                resultRequests as ResultRequestRead[],
+                                onExportFilename,
+                            )
+                        }
                         startIcon={<FileDownloadIcon />}
                     >
                         Export to CSV
                     </Button>
                 </Box>
             )}
-
-            {children}
 
             {isLoading && (
                 <Typography align="center" sx={{ mt: 2 }}>

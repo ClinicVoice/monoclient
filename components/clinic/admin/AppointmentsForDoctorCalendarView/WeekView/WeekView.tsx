@@ -8,13 +8,14 @@ import { WeekViewDayColumn } from '@/components/clinic/admin/AppointmentsForDoct
 import { WeekViewTimeLabels } from '@/components/clinic/admin/AppointmentsForDoctorCalendarView/WeekView/WeekViewTimeLabels';
 
 export interface WeekViewProps {
+    doctorId: number;
     date: Date;
     onSelectAppointment: (app: AppointmentRead) => void;
 }
 
 const totalMinutes = 12 * 60; // 720 minutes (8 AM to 8 PM)
 
-export const WeekView = ({ date, onSelectAppointment }: WeekViewProps) => {
+export const WeekView = ({ doctorId, date, onSelectAppointment }: WeekViewProps) => {
     const weekStart = startOfWeek(date, { weekStartsOn: 0 });
     const weekEnd = endOfWeek(date, { weekStartsOn: 0 });
     const days = eachDayOfInterval({ start: weekStart, end: weekEnd });
@@ -53,6 +54,7 @@ export const WeekView = ({ date, onSelectAppointment }: WeekViewProps) => {
                     {days.map((day) => (
                         <WeekViewDayColumn
                             key={format(day, 'yyyy-MM-dd')}
+                            doctorId={doctorId}
                             day={day}
                             onSelectAppointment={onSelectAppointment}
                             totalMinutes={totalMinutes}

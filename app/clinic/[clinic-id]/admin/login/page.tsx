@@ -1,9 +1,10 @@
 'use client';
 
+import React from 'react';
 import { useParams } from 'next/navigation';
 import { Typography } from '@mui/material';
 import { ModuleContainer } from '@/components/containers/Container';
-import { useFamilyClinicInfo } from '@/hooks/family_clinic/useFamilyClinicInfo';
+import { useClinic } from '@/hooks/clinics/useClinic';
 import { parseClinicIdFromUrlParams } from '@/utils/paramUtils';
 import Loading from '@/components/loading/Loading';
 import ErrorScreen from '@/components/screens/ErrorScreen';
@@ -12,11 +13,16 @@ import { AdminLoginForm } from '@/components/clinic/admin/AdminLoginForm';
 
 export default function AdminLogin() {
     const params = useParams();
-    const familyClinicId = parseClinicIdFromUrlParams(params);
-    const { data: clinic, isLoading, error } = useFamilyClinicInfo(familyClinicId);
+    const clinicId = parseClinicIdFromUrlParams(params);
+    const { data: clinic, isLoading, error } = useClinic(clinicId);
 
-    if (isLoading) return <Loading />;
-    if (error || !clinic) return <ErrorScreen message="Error loading clinic information." />;
+    if (isLoading) {
+        return <Loading />;
+    }
+
+    if (error || !clinic) {
+        return <ErrorScreen message="Error loading clinic information." />;
+    }
 
     return (
         <ModuleContainer>
@@ -24,7 +30,7 @@ export default function AdminLogin() {
                 <Typography variant="h1" gutterBottom>
                     {clinic.name}
                 </Typography>
-                <AdminLoginForm familyClinicId={familyClinicId} />
+                <AdminLoginForm clinicId={clinicId} />
             </LoginContainer>
         </ModuleContainer>
     );

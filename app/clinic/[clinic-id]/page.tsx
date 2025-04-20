@@ -53,9 +53,7 @@ export default function ClinicHomePage() {
                             variant="contained"
                             color="primary"
                             size="large"
-                            onClick={() =>
-                                router.push(`/family-clinic/${clinicId}/book-appointment`)
-                            }
+                            onClick={() => router.push(`/clinic/${clinicId}/book-appointment`)}
                         >
                             Book an Appointment
                         </Button>
@@ -65,9 +63,7 @@ export default function ClinicHomePage() {
                             variant="contained"
                             color="secondary"
                             size="large"
-                            onClick={() =>
-                                router.push(`/family-clinic/${clinicId}/admin/dashboard`)
-                            }
+                            onClick={() => router.push(`/clinic/${clinicId}/admin/dashboard`)}
                         >
                             Admin Dashboard
                         </Button>

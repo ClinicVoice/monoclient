@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Paper, Box, Typography } from '@mui/material';
-import { format, addMinutes } from 'date-fns';
+import { format } from 'date-fns';
 import { AppointmentRead } from '@/types/appointments';
 
 interface TimeHeightAppointmentCardProps {
@@ -16,28 +16,17 @@ export const TimeHeightAppointmentCard = ({
     onClick,
     height,
 }: TimeHeightAppointmentCardProps) => {
-    const startTime = new Date(parseInt(appointment.appointment_time_epoch) * 1000);
-    const durationMinutes = parseInt(appointment.duration);
-    const endTime = addMinutes(startTime, durationMinutes);
+    const startTime = new Date(appointment.appt_start_time);
+    const endTime = new Date(appointment.appt_end_time);
     const renderedHeight = Math.max(height, 20);
 
-    let displayName: string;
-    if (
-        !appointment.first_name ||
-        !appointment.last_name ||
-        (appointment.first_name.trim() === '' && appointment.last_name.trim() === '')
-    ) {
-        displayName = 'Name N/A';
-    } else {
-        const firstName = appointment.first_name.trim();
-        const lastName = appointment.last_name.trim();
-        displayName = `${lastName}, ${firstName}`;
-    }
+    // Display patient name
+    const { first_name, surname } = appointment.patient;
+    const hasName = first_name?.trim() || surname?.trim();
+    const displayName = hasName ? `${surname.trim()}, ${first_name.trim()}` : 'Name N/A';
 
-    const title =
-        appointment.appointment_type && appointment.appointment_type.trim() !== ''
-            ? appointment.appointment_type
-            : 'General Checkup';
+    // Fixed title since appointment_type is no longer available
+    const title = 'Appointment';
 
     const hasNotes = appointment.notes && appointment.notes.trim() !== '';
 

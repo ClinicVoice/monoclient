@@ -11,3 +11,15 @@ export const getAppointmentsForDoctorByDate = async (
     );
     return appointments;
 };
+
+export const getAvailableSlotsForDoctorByDate = async (
+    doctorId: number,
+    date: string, // YYYY‑MM‑DD
+    durationMinutes: number = 15,
+): Promise<string[]> => {
+    const { data: slots } = await axiosInstance.get<string[]>(
+        `/public/doctors/${doctorId}/available-slots`,
+        { params: { date, duration_minutes: durationMinutes } },
+    );
+    return slots;
+};

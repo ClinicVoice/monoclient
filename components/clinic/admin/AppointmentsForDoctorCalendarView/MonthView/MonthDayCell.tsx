@@ -3,20 +3,31 @@
 import React from 'react';
 import { format } from 'date-fns';
 import { Box, Paper, Typography, Skeleton } from '@mui/material';
-import { useScheduledAppointmentsByDate } from '@/hooks/family_clinic/useScheduledAppointmentsByDate';
+import { useAppointmentsForDoctorByDate } from '@/hooks/doctors/useAppointmentsForDoctorByDate';
 import { AppointmentRead } from '@/types/appointments';
 import { CalendarMonthAppointmentCard } from '@/components/clinic/admin/AppointmentsForDoctorCalendarView/MonthView/CalendarMonthAppointmentCard';
 
 export interface MonthDayCellProps {
+    doctorId: number;
     day: Date;
     currentMonth: number;
     onSelectAppointment: (app: AppointmentRead) => void;
 }
 
-export const MonthDayCell = ({ day, currentMonth, onSelectAppointment }: MonthDayCellProps) => {
+export const MonthDayCell = ({
+    doctorId,
+    day,
+    currentMonth,
+    onSelectAppointment,
+}: MonthDayCellProps) => {
     const formattedDate = format(day, 'yyyy-MM-dd');
-    const { data, isLoading, error } = useScheduledAppointmentsByDate(formattedDate);
-    const appointments: AppointmentRead[] = data?.scheduled_appointments || [];
+    const {
+        data: appointments,
+        isLoading,
+        error,
+    } = useAppointmentsForDoctorByDate(doctorId, formattedDate);
+
+    const cellBg = day.getMonth() === currentMonth ? 'background.paper' : 'grey.100';
 
     return (
         <Paper
@@ -25,7 +36,7 @@ export const MonthDayCell = ({ day, currentMonth, onSelectAppointment }: MonthDa
                 p: 1,
                 pt: 3,
                 position: 'relative',
-                bgcolor: day.getMonth() === currentMonth ? 'background.paper' : 'grey.100',
+                bgcolor: cellBg,
                 width: '100%',
                 border: '0.5px solid #e0e0e0',
                 boxSizing: 'border-box',
@@ -44,13 +55,13 @@ export const MonthDayCell = ({ day, currentMonth, onSelectAppointment }: MonthDa
                     <Typography variant="caption" color="error">
                         Error
                     </Typography>
-                ) : appointments.length === 0 ? (
+                ) : appointments && appointments.length === 0 ? (
                     <Typography variant="caption" color="text.secondary">
                         No appointments
                     </Typography>
                 ) : (
-                    appointments.map((appointment) => (
-                        <Box key={appointment.request_timestamp} sx={{ mb: 0.5 }}>
+                    appointments?.map((appointment: AppointmentRead) => (
+                        <Box key={appointment.id} sx={{ mb: 0.5 }}>
                             <CalendarMonthAppointmentCard
                                 appointment={appointment}
                                 onClick={() => onSelectAppointment(appointment)}

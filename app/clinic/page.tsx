@@ -8,7 +8,7 @@ import { ModuleContainer } from '@/components/containers/Container';
 export default function FamilyClinicCatalog() {
     const router = useRouter();
     useEffect(() => {
-        router.push('/family-clinic/1');
+        router.push('/clinic/1');
     }, [router]);
 
     return (

@@ -1,3 +1,6 @@
+'use client';
+
+import React from 'react';
 import {
     Dialog,
     DialogActions,
@@ -8,6 +11,7 @@ import {
     ListItem,
     ListItemText,
 } from '@mui/material';
+import { format, parseISO } from 'date-fns';
 import { CreateAppointmentForm } from '@/types/appointments';
 
 interface ConfirmAppointmentModalProps {
@@ -25,80 +29,40 @@ export default function ConfirmAppointmentModal({
     onConfirm,
     isPending,
 }: ConfirmAppointmentModalProps) {
+    const apptDate = format(parseISO(appointment.appt_start_time), 'PPP');
+    const apptTime = format(parseISO(appointment.appt_start_time), 'p');
+
     return (
         <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
             <DialogTitle>Confirm Your Appointment</DialogTitle>
             <DialogContent>
                 <List>
                     <ListItem>
-                        <ListItemText primary="Provider" secondary={appointment.provider} />
+                        <ListItemText primary="Doctor ID" secondary={appointment.doctor_id} />
+                    </ListItem>
+                    <ListItem>
+                        <ListItemText primary="Date" secondary={apptDate} />
+                    </ListItem>
+                    <ListItem>
+                        <ListItemText primary="Time" secondary={apptTime} />
                     </ListItem>
                     <ListItem>
                         <ListItemText
-                            primary="Appointment Type"
-                            secondary={appointment.appointment_type}
+                            primary="Duration"
+                            secondary={`${appointment.appt_duration_minutes} minutes`}
                         />
-                    </ListItem>
-                    <ListItem>
-                        <ListItemText primary="Reason for Visit" secondary={appointment.note} />
                     </ListItem>
                     <ListItem>
                         <ListItemText
-                            primary="Date & Time"
-                            secondary={`${appointment.date} at ${appointment.time}`}
+                            primary="Health Card Number"
+                            secondary={appointment.health_card_number}
                         />
                     </ListItem>
-                    {appointment.hasHealthCard ? (
-                        <>
-                            <ListItem>
-                                <ListItemText
-                                    primary="Health Card Number"
-                                    secondary={appointment.healthCardNumber}
-                                />
-                            </ListItem>
-                            <ListItem>
-                                <ListItemText
-                                    primary="Health Card Version"
-                                    secondary={appointment.healthCardVersion}
-                                />
-                            </ListItem>
-                        </>
-                    ) : (
-                        <>
-                            <ListItem>
-                                <ListItemText
-                                    primary="First Name"
-                                    secondary={appointment.firstName}
-                                />
-                            </ListItem>
-                            <ListItem>
-                                <ListItemText
-                                    primary="Last Name"
-                                    secondary={appointment.lastName}
-                                />
-                            </ListItem>
-                            <ListItem>
-                                <ListItemText
-                                    primary="Birth Date"
-                                    secondary={appointment.birthday}
-                                />
-                            </ListItem>
-                            <ListItem>
-                                <ListItemText primary="Sex" secondary={appointment.sex} />
-                            </ListItem>
-                        </>
-                    )}
                     <ListItem>
-                        <ListItemText primary="Phone Number" secondary={appointment.contact} />
+                        <ListItemText primary="Phone Number" secondary={appointment.phone_number} />
                     </ListItem>
                     <ListItem>
-                        <ListItemText primary="Email" secondary={appointment.email} />
-                    </ListItem>
-                    <ListItem>
-                        <ListItemText
-                            primary="Pharmacy"
-                            secondary={appointment.pharmacy || 'N/A'}
-                        />
+                        <ListItemText primary="Notes" secondary={appointment.notes || 'N/A'} />
                     </ListItem>
                 </List>
             </DialogContent>
