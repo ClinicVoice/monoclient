@@ -105,7 +105,7 @@ export default function Step1SelectAppointment({
                     />
                 </Grid>
 
-                {appointment.doctor_id && (
+                {Boolean(appointment.doctor_id) && (
                     <Grid item xs={12}>
                         <CalendarDatePicker
                             label="Date"
@@ -123,7 +123,7 @@ export default function Step1SelectAppointment({
                     </Grid>
                 )}
 
-                {appointment.doctor_id && dateStr && (
+                {Boolean(appointment.doctor_id && dateStr) && (
                     <Grid item xs={12}>
                         <FormControl fullWidth error={!!errors.appt_start_time}>
                             {slotsLoading ? (
