@@ -9,7 +9,7 @@ export const createAppointment = async (
     data: CreateAppointmentRequest,
 ): Promise<AppointmentRead> => {
     const { data: appointment } = await axiosInstance.post<AppointmentRead>(
-        '/public/appointments',
+        '/public/appointments/',
         data,
     );
     return appointment;

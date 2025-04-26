@@ -5,13 +5,13 @@ import { ClinicOpeningHours } from '@/types/openingHours';
 import { ResultRequestRead } from '@/types/resultRequests';
 
 export const listClinics = () =>
-    axiosInstance.get<ClinicRead[]>('/public/clinics').then((r) => r.data);
+    axiosInstance.get<ClinicRead[]>('/public/clinics/').then((r) => r.data);
 
 export const getClinic = (clinicId: number) =>
     axiosInstance.get<ClinicRead>(`/public/clinics/${clinicId}`).then((r) => r.data);
 
 export const createClinic = (data: CreateClinicRequest) =>
-    axiosInstance.post<ClinicRead>('/public/clinics', data).then((r) => r.data);
+    axiosInstance.post<ClinicRead>('/public/clinics/', data).then((r) => r.data);
 
 export const updateClinic = (clinicId: number, data: ClinicUpdateRequest) =>
     axiosInstance.put<ClinicRead>(`/public/clinics/${clinicId}`, data).then((r) => r.data);
