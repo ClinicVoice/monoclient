@@ -30,6 +30,7 @@ import { DayView } from '@/components/clinic/admin/AppointmentsForDoctorCalendar
 import { AppointmentDetailsPanel } from '@/components/clinic/admin/AppointmentsForDoctorCalendarView/AppointmentDetailsPanel';
 import { BookAppointmentDialog } from '@/components/forms/book-appointment/BookAppointmentDialog';
 import { DateNavigator } from '@/components/datepicker/DateNavigator';
+import RegisterPatientDialog from '@/components/forms/register-patient/RegisterPatientDialog';
 
 export const AppointmentsForDoctorCalendarView = () => {
     const params = useParams();
@@ -52,6 +53,7 @@ export const AppointmentsForDoctorCalendarView = () => {
     const [currentDate, setCurrentDate] = useState<Date>(new Date());
     const [selectedAppointment, setSelectedAppointment] = useState<AppointmentRead | null>(null);
     const [openCreateAppointment, setOpenCreateAppointment] = useState(false);
+    const [openRegisterPatient, setOpenRegisterPatient] = useState(false);
 
     const formattedDate = format(currentDate, 'yyyy-MM-dd');
     const {
@@ -161,6 +163,17 @@ export const AppointmentsForDoctorCalendarView = () => {
                     >
                         Create Appointment
                     </Button>
+
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        startIcon={<AddIcon />}
+                        onClick={() => setOpenRegisterPatient(true)}
+                        disabled={!selectedDoctorId}
+                    >
+                        Create Patient
+                    </Button>
+
                     <Button
                         variant="contained"
                         color="primary"
@@ -233,6 +246,15 @@ export const AppointmentsForDoctorCalendarView = () => {
                 open={openCreateAppointment}
                 onClose={() => setOpenCreateAppointment(false)}
             />
+
+            {selectedDoctorId && (
+                <RegisterPatientDialog
+                    open={openRegisterPatient}
+                    onClose={() => setOpenRegisterPatient(false)}
+                    clinicId={clinicId}
+                    doctorId={selectedDoctorId}
+                />
+            )}
         </Box>
     );
 };
