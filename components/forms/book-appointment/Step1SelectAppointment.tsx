@@ -112,12 +112,15 @@ export default function Step1SelectAppointment({
                         <CalendarDatePicker
                             label="Date"
                             sx={{ width: '100%' }}
-                            value={dateStr ? new Date(dateStr) : null}
+                            value={
+                                appointment.appt_start_time
+                                    ? parseISO(appointment.appt_start_time)
+                                    : null
+                            }
                             onChange={(newDate) => {
-                                if (newDate) {
-                                    const isoDate = newDate.toISOString().split('T')[0];
-                                    updateAppointmentField('appt_start_time', `${isoDate}T00:00`);
-                                }
+                                if (!newDate) return;
+                                const localDate = format(newDate, 'yyyy-MM-dd');
+                                updateAppointmentField('appt_start_time', `${localDate}T00:00`);
                             }}
                             minDate={new Date()}
                             maxDate={new Date(Date.now() + MAX_DAYS_AHEAD * 86400000)}
