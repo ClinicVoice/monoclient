@@ -69,7 +69,6 @@ export default function AdminDashboard() {
                         color="secondary"
                         startIcon={<SettingsIcon />}
                         onClick={() => router.push(`/clinic/${clinicId}/admin/dashboard/settings`)}
-                        disabled={true}
                     >
                         Settings
                     </Button>

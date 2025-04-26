@@ -53,7 +53,6 @@ export const AppointmentsForDoctorCalendarView = () => {
     const [selectedAppointment, setSelectedAppointment] = useState<AppointmentRead | null>(null);
     const [openCreateAppointment, setOpenCreateAppointment] = useState(false);
 
-    // Fetch appointments when doctor and date change
     const formattedDate = format(currentDate, 'yyyy-MM-dd');
     const {
         data: appointments,
