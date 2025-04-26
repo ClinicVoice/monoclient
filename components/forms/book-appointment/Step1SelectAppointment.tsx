@@ -59,8 +59,10 @@ export default function Step1SelectAppointment({
     const [selectedTime, setSelectedTime] = useState<string>(appointment.appt_start_time || '');
 
     useEffect(() => {
-        if (selectedTime) updateAppointmentField('appt_start_time', selectedTime);
-    }, [selectedTime, updateAppointmentField]);
+        if (selectedTime) {
+            updateAppointmentField('appt_start_time', selectedTime);
+        }
+    }, [selectedTime]);
 
     if (doctorsLoading) return <CircularProgress />;
     if (doctorsError) return <Alert severity="error">Failed to load doctors.</Alert>;

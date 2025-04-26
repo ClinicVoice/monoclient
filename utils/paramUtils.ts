@@ -1,4 +1,6 @@
-export const parseClinicIdFromUrlParams = (params: Record<string, string | string[]>): number => {
+import { Params } from 'next/dist/server/request/params';
+
+export const parseClinicIdFromUrlParams = (params: Params): number => {
     const param = params['clinic-id'];
     const idStr = Array.isArray(param) ? param[0] : param;
     const id = Number(idStr);

@@ -14,14 +14,12 @@ interface AuthGuardProps {
 const AuthGuard = ({ children, reroute = '/login' }: AuthGuardProps) => {
     const { isAuthed, isInitialized } = useAuth();
     const router = useRouter();
-    const { setToaster } = useToaster();
 
     useEffect(() => {
         if (isInitialized && !isAuthed) {
-            setToaster('Not authorized to access this page. Redirecting...', 'error');
             router.push(reroute || '/login');
         }
-    }, [isAuthed, isInitialized, reroute, router, setToaster]);
+    }, [isAuthed, isInitialized, reroute, router]);
 
     if (!isAuthed || !isInitialized) {
         return <Loading />;
