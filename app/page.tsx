@@ -8,7 +8,7 @@ import { ModuleContainer } from '@/components/containers/Container';
 export default function Entry() {
     const router = useRouter();
     useEffect(() => {
-        router.push('/clinic/1/admin/dashboard');
+        router.push('/clinic');
     }, [router]);
 
     return (

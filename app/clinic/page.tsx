@@ -1,19 +1,7 @@
 'use client';
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import Loading from '@/components/loading/Loading';
-import { ModuleContainer } from '@/components/containers/Container';
 
-// TODO: in the future, this will become a catalog to select between many family clinics
-export default function FamilyClinicCatalog() {
-    const router = useRouter();
-    useEffect(() => {
-        router.push('/clinic/1');
-    }, [router]);
+import { ClinicCatalogComponent } from '@/components/clinic/ClinicCatalogComponent';
 
-    return (
-        <ModuleContainer>
-            <Loading />
-        </ModuleContainer>
-    );
+export default function ClinicCatalog() {
+    return <ClinicCatalogComponent />;
 }
