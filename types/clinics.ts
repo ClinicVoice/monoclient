@@ -23,3 +23,12 @@ export interface ClinicRead {
     accepting_new_patients: boolean;
     created_at: string; // ISO‑8601 datetime
 }
+
+export interface ListClinicsParams {
+    page?: number;
+    limit?: number;
+    name?: string;
+    phone?: string;
+    email?: string;
+    accepting_new_patients?: boolean;
+}

@@ -14,6 +14,12 @@ export interface DoctorRead {
     accepting_new_patients: boolean;
 }
 
+export interface ListDoctorsParams {
+    page?: number;
+    limit?: number;
+    name_search?: string;
+}
+
 export interface UpdateDoctorRequest {
     name?: string;
     clinic_id?: number;
