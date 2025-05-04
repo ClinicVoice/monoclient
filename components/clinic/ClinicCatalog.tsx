@@ -51,15 +51,15 @@ export const ClinicCatalog = () => {
 
     return (
         <Box sx={{ maxWidth: 1200, mx: 'auto', p: 4, pb: 12 }}>
-            <Typography variant="h1" gutterBottom align="left">
+            <Typography variant="h1" gutterBottom align="center">
                 Clinic Catalog
             </Typography>
 
-            <Typography variant="h6" gutterBottom align="left">
+            <Typography variant="h6" gutterBottom align="center">
                 Search for a clinic
             </Typography>
 
-            <Box display="flex" flexWrap="wrap" gap={2} mb={4} justifyContent="center">
+            <Box display="flex" flexWrap="wrap" gap={2} mb={4} mt={2} justifyContent="center">
                 <TextField
                     label="Name"
                     variant="outlined"
