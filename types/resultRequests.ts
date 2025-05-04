@@ -23,3 +23,13 @@ export interface ResultRequestUpdate {
     email?: string;
     phone_number?: string;
 }
+
+export interface ListResultRequestsParams {
+    page?: number;
+    limit?: number;
+    first_name?: string;
+    last_name?: string;
+    requested_item?: string;
+    email?: string;
+    phone?: string;
+}

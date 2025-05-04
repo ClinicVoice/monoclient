@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, forwardRef } from 'react';
 import { format, addDays, startOfWeek, endOfWeek, eachDayOfInterval } from 'date-fns';
 import {
     Box,
@@ -32,7 +32,12 @@ import { BookAppointmentDialog } from '@/components/forms/book-appointment/BookA
 import { DateNavigator } from '@/components/datepicker/DateNavigator';
 import RegisterPatientDialog from '@/components/forms/register-patient/RegisterPatientDialog';
 
-export const AppointmentsForDoctorCalendarView = () => {
+export type AppointmentsForDoctorCalendarViewProps = object;
+
+export const AppointmentsForDoctorCalendarView = forwardRef<
+    HTMLDivElement,
+    AppointmentsForDoctorCalendarViewProps
+>((props, ref) => {
     const params = useParams();
     const clinicId = parseClinicIdFromUrlParams(params);
     const {
@@ -125,12 +130,16 @@ export const AppointmentsForDoctorCalendarView = () => {
               : format(currentDate, 'MMMM yyyy');
 
     return (
-        <Box sx={{ width: '100%', mb: 4 }}>
+        <Box sx={{ width: '100%', mb: 4 }} ref={ref}>
+            <Typography align="center" variant="h2">
+                Scheduled Appointments
+            </Typography>
             <Box
                 sx={{
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
+                    mt: 2,
                     mb: 2,
                     flexWrap: 'wrap',
                 }}
@@ -257,4 +266,5 @@ export const AppointmentsForDoctorCalendarView = () => {
             )}
         </Box>
     );
-};
+});
+AppointmentsForDoctorCalendarView.displayName = 'AppointmentsForDoctorCalendarView';

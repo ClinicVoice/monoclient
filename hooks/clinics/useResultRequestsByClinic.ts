@@ -1,11 +1,18 @@
 import { useQuery } from '@tanstack/react-query';
-import { ResultRequestRead } from '@/types/resultRequests';
+import { ListResultRequestsParams, ResultRequestRead } from '@/types/resultRequests';
 import { AxiosError } from 'axios';
 import { getResultRequestsByClinic } from '@/services/clinicService';
 
-export const useResultRequestsByClinic = (clinicId: number) =>
-    useQuery<ResultRequestRead[], AxiosError>({
-        queryKey: ['clinicResultRequests', clinicId],
-        queryFn: () => getResultRequestsByClinic(clinicId),
-        enabled: !!clinicId,
+export const useResultRequestsByClinic = (clinicId: number, params?: ListResultRequestsParams) =>
+    useQuery<
+        ResultRequestRead[],
+        AxiosError,
+        ResultRequestRead[],
+        ['clinicResultRequests', number, ListResultRequestsParams?]
+    >({
+        queryKey: ['clinicResultRequests', clinicId, params],
+        queryFn: () => getResultRequestsByClinic(clinicId, params ?? {}),
+        enabled: Boolean(clinicId),
+        staleTime: 1000 * 60 * 5,
+        retry: 1,
     });

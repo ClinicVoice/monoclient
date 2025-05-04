@@ -7,7 +7,7 @@ import {
 } from '@/types/clinics';
 import { DoctorRead, ListDoctorsParams } from '@/types/doctors';
 import { ClinicOpeningHours } from '@/types/openingHours';
-import { ResultRequestRead } from '@/types/resultRequests';
+import { ListResultRequestsParams, ResultRequestRead } from '@/types/resultRequests';
 import { ListPatientsParams, PatientRead } from '@/types/patients';
 
 export const listClinics = (params?: ListClinicsParams) =>
@@ -32,11 +32,10 @@ export const getOpeningHoursForClinic = (clinicId: number) =>
         .get<ClinicOpeningHours>(`/public/clinics/${clinicId}/opening-hours`)
         .then((r) => r.data);
 
-export const getResultRequestsByClinic = (clinicId: number) =>
+export const getResultRequestsByClinic = (clinicId: number, params?: ListResultRequestsParams) =>
     axiosInstance
-        .get<ResultRequestRead[]>(`/public/clinics/${clinicId}/result-requests`)
+        .get<ResultRequestRead[]>(`/public/clinics/${clinicId}/result-requests`, { params })
         .then((r) => r.data);
-
 export const getPatientsByClinic = (clinicId: number, params?: ListPatientsParams) =>
     axiosInstance
         .get<PatientRead[]>(`/public/clinics/${clinicId}/patients`, { params })

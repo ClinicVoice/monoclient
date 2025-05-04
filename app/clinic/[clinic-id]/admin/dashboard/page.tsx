@@ -1,8 +1,8 @@
 'use client';
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { Typography, Button, Box, Divider } from '@mui/material';
+import { Typography, Button, Box, Divider, Grid } from '@mui/material';
 import LogoutButton from '@/components/buttons/LogoutButton';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { DashboardContainer } from '@/app/clinic/[clinic-id]/admin/dashboard/styles';
@@ -11,13 +11,15 @@ import Loading from '@/components/loading/Loading';
 import ErrorScreen from '@/components/screens/ErrorScreen';
 import { parseClinicIdFromUrlParams } from '@/utils/paramUtils';
 import { AppointmentsForDoctorCalendarView } from '@/components/clinic/admin/AppointmentsForDoctorCalendarView/AppointmentsForDoctorCalendarView';
-import ResultRequestsTable from '@/components/clinic/admin/ResultRequestsTable';
+import { ResultRequestsTable } from '@/components/clinic/admin/ResultRequestsTable';
 
 export default function AdminDashboard() {
     const params = useParams();
     const clinicId = parseClinicIdFromUrlParams(params);
     const router = useRouter();
     const { data: clinic, isLoading, error } = useClinic(clinicId);
+    const appointmentsRef = useRef<HTMLDivElement>(null);
+    const resultsRef = useRef<HTMLDivElement>(null);
 
     if (isLoading) {
         return <Loading />;
@@ -64,39 +66,88 @@ export default function AdminDashboard() {
                         gap: 1,
                     }}
                 >
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        startIcon={<SettingsIcon />}
-                        onClick={() => router.push(`/clinic/${clinicId}/admin/dashboard/settings`)}
-                    >
-                        Settings
-                    </Button>
                     <LogoutButton redirectTo={`/clinic/${clinicId}`} />
                 </Box>
             </Box>
 
-            <Box sx={{ mb: 2 }}>
-                <Divider
-                    sx={{
-                        borderWidth: '10',
-                        width: '95vw',
-                    }}
-                />
+            <Box sx={{ mb: 4 }}>
+                <Divider sx={{ borderWidth: 1, width: '95vw' }} />
             </Box>
-
-            <AppointmentsForDoctorCalendarView />
 
             <Box sx={{ mb: 4 }}>
-                <Divider
-                    sx={{
-                        borderWidth: '10',
-                        width: '90vw',
-                    }}
-                />
+                <Grid container spacing={2} justifyContent="center">
+                    <Grid item>
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            onClick={() =>
+                                router.push(`/clinic/${clinicId}/admin/dashboard/doctors`)
+                            }
+                        >
+                            Manage Doctors
+                        </Button>
+                    </Grid>
+                    <Grid item>
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            onClick={() =>
+                                router.push(`/clinic/${clinicId}/admin/dashboard/patients`)
+                            }
+                        >
+                            Manage Patients
+                        </Button>
+                    </Grid>
+                    <Grid item>
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            onClick={() =>
+                                router.push(`/clinic/${clinicId}/admin/dashboard/settings`)
+                            }
+                        >
+                            Manage Settings
+                        </Button>
+                    </Grid>
+                </Grid>
             </Box>
 
-            <ResultRequestsTable />
+            <Box sx={{ mb: 4 }}>
+                <Grid container spacing={2} justifyContent="center">
+                    <Grid item>
+                        <Button
+                            variant="contained"
+                            onClick={() =>
+                                appointmentsRef.current?.scrollIntoView({ behavior: 'smooth' })
+                            }
+                        >
+                            View Scheduled Appointments
+                        </Button>
+                    </Grid>
+                    <Grid item>
+                        <Button
+                            variant="contained"
+                            onClick={() =>
+                                resultsRef.current?.scrollIntoView({ behavior: 'smooth' })
+                            }
+                        >
+                            View Result Requests
+                        </Button>
+                    </Grid>
+                </Grid>
+            </Box>
+
+            <Box sx={{ mb: 4 }}>
+                <Divider sx={{ borderWidth: 1, width: '95vw' }} />
+            </Box>
+
+            <AppointmentsForDoctorCalendarView ref={appointmentsRef} />
+
+            <Box sx={{ mb: 4 }}>
+                <Divider sx={{ borderWidth: 1, width: '95vw' }} />
+            </Box>
+
+            <ResultRequestsTable ref={resultsRef} />
         </DashboardContainer>
     );
 }

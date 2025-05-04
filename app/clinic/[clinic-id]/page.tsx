@@ -28,10 +28,12 @@ export default function ClinicHomePage() {
     return (
         <ModuleContainer>
             <InfoCard>
-                <Typography variant="h1" gutterBottom>
+                <Typography variant="h1" gutterBottom align="center">
                     {clinic.name}
                 </Typography>
+
                 <Divider />
+
                 <Box marginY={2}>
                     <Typography variant="body1">
                         <strong>Address:</strong> {clinic.address}
@@ -47,7 +49,7 @@ export default function ClinicHomePage() {
 
                 <Divider />
 
-                <Grid container spacing={2} mt={0} justifyContent="center">
+                <Grid container spacing={2} justifyContent="center">
                     <Grid item>
                         <Button
                             variant="contained"
@@ -66,6 +68,16 @@ export default function ClinicHomePage() {
                             onClick={() => router.push(`/clinic/${clinicId}/admin/dashboard`)}
                         >
                             Admin Dashboard
+                        </Button>
+                    </Grid>
+                    <Grid item>
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            size="large"
+                            onClick={() => router.push('/clinic')}
+                        >
+                            Back to Catalog
                         </Button>
                     </Grid>
                 </Grid>
