@@ -26,3 +26,10 @@ export interface UpdateDoctorRequest {
     default_appt_duration_minutes?: number;
     accepting_new_patients?: boolean;
 }
+
+export interface DoctorCreateRequest {
+    name: string;
+    clinic_id: number;
+    default_appt_duration_minutes: number;
+    accepting_new_patients: boolean;
+}

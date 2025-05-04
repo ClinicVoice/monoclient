@@ -1,6 +1,6 @@
 import { AppointmentRead } from '@/types/appointments';
 import axiosInstance from '@/instances/axiosInstance';
-import { DoctorRead, UpdateDoctorRequest } from '@/types/doctors';
+import { DoctorCreateRequest, DoctorRead, UpdateDoctorRequest } from '@/types/doctors';
 
 export const getAppointmentsForDoctorByDate = async (
     doctorId: number,
@@ -33,3 +33,6 @@ export const updateDoctorById = (
     data: UpdateDoctorRequest,
 ): Promise<DoctorRead> =>
     axiosInstance.put<DoctorRead>(`/public/doctors/${doctorId}`, data).then((res) => res.data);
+
+export const createDoctor = (data: DoctorCreateRequest): Promise<DoctorRead> =>
+    axiosInstance.post<DoctorRead>('/public/doctors/', data).then((res) => res.data);

@@ -32,6 +32,14 @@ export const getOpeningHoursForClinic = (clinicId: number) =>
         .get<ClinicOpeningHours>(`/public/clinics/${clinicId}/opening-hours`)
         .then((r) => r.data);
 
+export const updateOpeningHoursForClinic = (
+    clinicId: number,
+    data: ClinicOpeningHours,
+): Promise<ClinicOpeningHours> =>
+    axiosInstance
+        .put<ClinicOpeningHours>(`/public/clinics/${clinicId}/opening-hours`, data)
+        .then((r) => r.data);
+
 export const getResultRequestsByClinic = (clinicId: number, params?: ListResultRequestsParams) =>
     axiosInstance
         .get<ResultRequestRead[]>(`/public/clinics/${clinicId}/result-requests`, { params })

@@ -13,10 +13,12 @@ import {
     CircularProgress,
     Alert,
     Pagination,
+    Stack,
 } from '@mui/material';
 import { parseClinicIdFromUrlParams } from '@/utils/paramUtils';
 import { useDoctorsByClinic } from '@/hooks/clinics/useDoctorsByClinic';
 import { DoctorRead, ListDoctorsParams } from '@/types/doctors';
+import CreateDoctorDialog from '@/components/forms/create-doctor/CreateDoctorDialog';
 
 export default function DoctorCatalog() {
     const paramsUrl = useParams();
@@ -24,8 +26,9 @@ export default function DoctorCatalog() {
     const clinicId = parseClinicIdFromUrlParams(paramsUrl);
     const initialParams: ListDoctorsParams = { page: 1, limit: 20 };
     const [params, setParams] = useState<ListDoctorsParams>(initialParams);
+    const [isDialogOpen, setDialogOpen] = useState(false);
 
-    const { data: doctors, isLoading, error } = useDoctorsByClinic(clinicId, params);
+    const { data: doctors, isLoading, error, refetch } = useDoctorsByClinic(clinicId, params);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const val = event.target.value.trim();
@@ -36,26 +39,38 @@ export default function DoctorCatalog() {
         }));
     };
 
-    const handlePageChange = (_: React.ChangeEvent<unknown>, value: number) => {
+    const handlePageChange = (_: unknown, value: number) => {
         setParams((prev) => ({ ...prev, page: value }));
+    };
+
+    const openDialog = () => setDialogOpen(true);
+    const closeDialog = () => setDialogOpen(false);
+
+    const onDoctorCreated = () => {
+        closeDialog();
+        refetch();
     };
 
     return (
         <Box sx={{ maxWidth: 1000, mx: 'auto', p: 4 }}>
-            <Button
-                color="secondary"
-                variant="contained"
-                onClick={() => router.push(`/clinic/${clinicId}/admin/dashboard`)}
-                sx={{ mb: 2 }}
-            >
-                Back to Dashboard
-            </Button>
+            <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}>
+                <Button
+                    color="secondary"
+                    variant="contained"
+                    onClick={() => router.push(`/clinic/${clinicId}/admin/dashboard`)}
+                >
+                    Back to Dashboard
+                </Button>
+                <Button variant="contained" onClick={openDialog}>
+                    Create Doctor
+                </Button>
+            </Stack>
 
             <Typography variant="h1" align="center" gutterBottom>
                 Doctor Catalog
             </Typography>
 
-            <Box sx={{ display: 'flex', justifyContent: 'left', mb: 3 }}>
+            <Box sx={{ display: 'flex', mb: 3 }}>
                 <TextField
                     label="Search by name"
                     variant="outlined"
@@ -116,6 +131,13 @@ export default function DoctorCatalog() {
                     </Box>
                 </>
             )}
+
+            <CreateDoctorDialog
+                open={isDialogOpen}
+                onClose={closeDialog}
+                clinicId={clinicId}
+                onCreated={onDoctorCreated}
+            />
         </Box>
     );
 }
