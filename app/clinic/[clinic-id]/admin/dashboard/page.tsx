@@ -4,7 +4,6 @@ import React, { useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Typography, Button, Box, Divider, Grid } from '@mui/material';
 import LogoutButton from '@/components/buttons/LogoutButton';
-import SettingsIcon from '@mui/icons-material/Settings';
 import { DashboardContainer } from '@/app/clinic/[clinic-id]/admin/dashboard/styles';
 import { useClinic } from '@/hooks/clinics/useClinic';
 import Loading from '@/components/loading/Loading';

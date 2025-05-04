@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 import { ClinicRead, ListClinicsParams } from '@/types/clinics';
 
-export const ClinicCatalogComponent = () => {
+export const ClinicCatalog = () => {
     const initialParams: ListClinicsParams = { page: 1, limit: 12 };
     const [params, setParams] = useState<ListClinicsParams>(initialParams);
 

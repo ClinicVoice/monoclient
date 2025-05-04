@@ -9,7 +9,10 @@ export const ReactQueryProvider = ({ children }: any) => {
     const queryClient = new QueryClient({
         queryCache: new QueryCache({
             onError: (err) => {
-                if (err instanceof AxiosError && err.response?.status === 401) {
+                if (
+                    err instanceof AxiosError &&
+                    (err.response?.status === 401 || err.response?.status === 403)
+                ) {
                     clearAuth();
                 }
             },

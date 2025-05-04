@@ -1,7 +1,7 @@
 'use client';
 
-import { ClinicCatalogComponent } from '@/components/clinic/ClinicCatalogComponent';
+import { ClinicCatalog } from '@/components/clinic/ClinicCatalog';
 
-export default function ClinicCatalog() {
-    return <ClinicCatalogComponent />;
+export default function ClinicCatalogPage() {
+    return <ClinicCatalog />;
 }
