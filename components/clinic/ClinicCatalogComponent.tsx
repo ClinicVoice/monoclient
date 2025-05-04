@@ -26,6 +26,7 @@ export const ClinicCatalogComponent = () => {
 
     const handleChange =
         (field: keyof ListClinicsParams) => (event: React.ChangeEvent<HTMLInputElement>) => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             let value: any;
             if (field === 'accepting_new_patients') {
                 value = event.target.checked;
